@@ -1,0 +1,24 @@
+.area-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px; /* Adjust the gap value to your preference */
+}
+
+.area {
+  border: 1px solid black; /* Add any additional styling you desire */
+  padding: 10px; /* Adjust the padding value to your preference */
+}
+
+.graveyard-grid {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  grid-template-rows: repeat(6, 1fr);
+  gap: 5px; /* Adjust the gap value to your preference */
+}
+
+.graveyard {
+  border: 1px solid black; /* Add any additional styling you desire */
+  padding: 5px; /* Adjust the padding value to your preference */
+}
