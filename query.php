@@ -48,24 +48,260 @@ function getDperson($conn){
 //     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 // }
 
-function get_user_data($position) {
-    $query = "SELECT * FROM user_form WHERE position = ?";
-    $result = performQuery($query, [$position]);
+function get_user_data($user_id) {
+    // Prepare the query to select user data based on the user ID
+    $query = "SELECT * FROM user_form WHERE id = ?";
+    // Execute the query with the user ID as the parameter
+    $result = performQuery($query, [$user_id]);
 
-    if ($result->num_rows >= 1) {
+    // Check if there is at least one row returned
+    if ($result->num_rows == 1) {
+        // Fetch the first row of the result as an associative array
         $row = $result->fetch_assoc();
+        // Construct an associative array with user data
         $user_data = array(
+            'id' => $row['id'],
             'position' => $row['position'],
             'firstname' => $row['firstname'],
             'lastname' => $row['lastname'],
             // Add other fields as needed
         );
 
+        // Return the user data array
         return $user_data;
     } else {
+        // Return null if no user data is found
         return null;
     }
 }
+
+function get_client_data($client_id) {
+    // Prepare the query to select user data based on the user ID
+    $query = "SELECT * FROM client_form WHERE id = ?";
+    // Execute the query with the user ID as the parameter
+    $result = performQuery($query, [$client_id]);
+
+    // Check if there is at least one row returned
+    if ($result->num_rows == 1) {
+        // Fetch the first row of the result as an associative array
+        $row = $result->fetch_assoc();
+        // Construct an associative array with user data
+        $client_data = array(
+            'id' => $row['id'],
+            'position' => $row['position'],
+            'firstname' => $row['firstname'],
+            'lastname' => $row['lastname'],
+            'clientNum' => $row['clientnum'], // Ensure this field is correct
+            // Add other fields as needed
+        );
+
+        // Return the user data array
+        return $client_data;
+    } else {
+        // Return null if no user data is found
+        return null;
+    }
+}
+
+function check_client_exists_in_areano1($clientNum) {
+    // Prepare the query to check if clientNum exists in areano1 table
+    $query = "SELECT * FROM areano1 WHERE clientNum = ?";
+    // Execute the query with the clientNum as the parameter
+    $result = performQuery($query, [$clientNum]);
+
+    // Initialize an array to store client data
+    $client_areaNo_data = [];
+
+    // Check if there is at least one row returned
+    if ($result->num_rows > 0) {
+        // Loop through the result set and fetch each row
+        while ($row = $result->fetch_assoc()) {
+            // Construct an associative array with client data for each row
+            $client_row = array(
+                'areaOneId' => $row['areaOneId'],
+                'clientNum' => $row['clientNum'],
+                'dpNum' => $row['dpNum'],
+                'firstname' => $row['firstname'],
+                'lastname' => $row['lastname'],
+                'middlename' => $row['middlename'],
+                'graveNo' => $row['graveNo'],
+                'dateofBirth' => $row['dateofBirth'],
+                'dateOfDeath' => $row['dateOfDeath'],
+                'dateofBuried' => $row['dateofBuried'],
+                'status' => $row['status'],
+                'statCol' => $row['statCol'],
+                'areaNo' => $row['areaNo'],
+                'graveType' => $row['graveType'],
+                'buriedStatus' => $row['buriedStatus'],
+                'maintenanceStatus' => $row['maintenanceStatus'],
+                'lastMaintenanceDate' => $row['lastMaintenanceDate'],
+            );
+
+            // Push the client data array into the main client_areaNo_data array
+            $client_areaNo_data[] = $client_row;
+        }
+    }
+
+    // Return the client data array
+    return $client_areaNo_data;
+}
+
+#============================30 per row==============================================#
+function get_client_data_for_grave_numbers($graveNumbers) {
+    // Prepare the query to fetch client data for given grave numbers
+    $placeholders = implode(',', array_fill(0, count($graveNumbers), '?'));
+    $query = "SELECT * FROM areano1 WHERE graveNo IN ($placeholders)";
+    
+    // Execute the query with the grave numbers as parameters
+    $result = performQuery($query, $graveNumbers);
+
+    // Initialize an array to store client data
+    $client_data = [];
+
+    // Check if there are any rows returned
+    if ($result->num_rows > 0) {
+        // Loop through the result set and fetch each row
+        while ($row = $result->fetch_assoc()) {
+            // Construct an associative array with client data for each row
+            $client_row = array(
+                'areaOneId' => $row['areaOneId'],
+                'clientNum' => $row['clientNum'],
+                'dpNum' => $row['dpNum'],
+                'firstname' => $row['firstname'],
+                'lastname' => $row['lastname'],
+                'middlename' => $row['middlename'],
+                'graveNo' => $row['graveNo'],
+                'dateofBirth' => $row['dateofBirth'],
+                'dateOfDeath' => $row['dateOfDeath'],
+                'dateofBuried' => $row['dateofBuried'],
+                'status' => $row['status'],
+                'statCol' => $row['statCol'],
+                'areaNo' => $row['areaNo'],
+                'graveType' => $row['graveType'],
+                'buriedStatus' => $row['buriedStatus'],
+                'maintenanceStatus' => $row['maintenanceStatus'],
+                'lastMaintenanceDate' => $row['lastMaintenanceDate'],
+            );
+
+            // Push the client data array into the main client_data array
+            $client_data[] = $client_row;
+        }
+    }
+
+    // Return the client data array
+    return $client_data;
+}
+
+
+
+
+function get_data_by_area($areaOneId) {
+    // Prepare the query to fetch data based on areaOneId
+    $query = "SELECT * FROM areano1 WHERE areaOneId = ?";
+    // Execute the query with the areaOneId as the parameter
+    $result = performQuery($query, [$areaOneId]);
+
+    // Initialize an array to store the data
+    $data = [];
+
+    // Check if there is at least one row returned
+    if ($result->num_rows > 0) {
+        // Loop through the result set and fetch each row
+        while ($row = $result->fetch_assoc()) {
+            // Construct an associative array with data for each row
+            $data_row = array(
+                'areaOneId' => $row['areaOneId'],
+                'clientNum' => $row['clientNum'],
+                'dpNum' => $row['dpNum'],
+                'firstname' => $row['firstname'],
+                'lastname' => $row['lastname'],
+                'middlename' => $row['middlename'],
+                'graveNo' => $row['graveNo'],
+                'dateofBirth' => $row['dateofBirth'],
+                'dateOfDeath' => $row['dateOfDeath'],
+                'dateofBuried' => $row['dateofBuried'],
+                'status' => $row['status'],
+                'statCol' => $row['statCol'],
+                'areaNo' => $row['areaNo'],
+                'graveType' => $row['graveType'],
+                'buriedStatus' => $row['buriedStatus'],
+                'maintenanceStatus' => $row['maintenanceStatus'],
+                'lastMaintenanceDate' => $row['lastMaintenanceDate'],
+                // Add other fields as needed
+            );
+
+            // Push the data array into the main data array
+            $data[] = $data_row;
+        }
+    }
+
+    // Return the data array
+    return $data;
+}
+
+// Fetch data for a specific area
+$areaOneId = 1; // Example value
+$area_data = get_data_by_area($areaOneId);
+
+// function get_client_data($client_id) {
+//     // Prepare the query to select user data based on the user ID
+//     $query = "SELECT * FROM client_form WHERE id = ?";
+//     // Execute the query with the user ID as the parameter
+//     $result = performQuery($query, [$client_id]);
+
+//     // Check if there is at least one row returned
+//     if ($result->num_rows == 1) {
+//         // Fetch the first row of the result as an associative array
+//         $row = $result->fetch_assoc();
+//         // Construct an associative array with user data
+//         $client_data = array(
+//             'id' => $row['id'],
+//             'position' => $row['position'],
+//             'firstname' => $row['firstname'],
+//             'lastname' => $row['lastname'],
+//             'clientNum' => $row['clientNum'],
+//             // Add other fields as needed
+//         );
+
+//         // Return the user data array
+//         return $client_data;
+//     } else {
+//         // Return null if no user data is found
+//         return null;
+//     }
+// }
+
+// function get_area_one_data($clientNum) {
+//     // Prepare the query to select area one data based on clientNum
+//     $query = "SELECT * FROM areano1 WHERE clientNum = ?";
+//     // Execute the query with the clientNum as the parameter
+//     $result = performQuery($query, [$clientNum]);
+
+//     // Initialize an array to store area one data
+//     $area_one_data = [];
+
+//     // Check if there is at least one row returned
+//     if ($result->num_rows > 0) {
+//         // Loop through the result set and fetch each row
+//         while ($row = $result->fetch_assoc()) {
+//             // Construct an associative array with area one data for each row
+//             $area_one_row = array(
+//                 'areaOneId' => $row['areaOneId'],
+//                 'clientNum' => $row['clientNum'],
+//                 'dpNum' => $row['dpNum'],
+//                 'firstname' => $row['firstname'],
+//                 'lastname' => $row['lastname'],
+//                 // Add other fields as needed
+//             );
+
+//             // Push the area one data array into the main area_one_data array
+//             $area_one_data[] = $area_one_row;
+//         }
+//     }
+
+//     // Return the area one data array
+//     return $area_one_data;
+// }
 
 function getId() {
     global $conn;

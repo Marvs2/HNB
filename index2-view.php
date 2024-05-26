@@ -1,8 +1,23 @@
 <?php
 session_start();
 include 'config.php';
-include 'check_session.php';
+// include 'check_session.php';
 include 'query.php';
+// Ensure session_start() is called at the very beginning
+if (isset($_SESSION['user_id'])) {
+    $user_id = $_SESSION['user_id'];
+    $user_data = get_user_data($user_id);
+
+    if ($user_data !== null) {
+        $firstname = $user_data['firstname'];
+        $lastname = $user_data['lastname'];
+        // Additional user data can be accessed here
+    } else {
+        echo "No user data found!";
+    }
+} else {
+    echo "User is not logged in!";
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -93,14 +108,18 @@ include 'query.php';
 		<nav>
 			<i class='bx bx-menu'> </i>
 			<a href="#" class="profile">
-				<?php
-                    $user_data = get_user_data(1);
-                    if ($user_data >= 1) {
-                        echo $_SESSION['firstname'];
-                    }else {
-                        echo $_SESSION['firstname'];
-                    }
-                ?>
+                <?php
+                // Check if the user is logged in
+                if (isset($firstname)) {
+                    // Display user information if logged in
+                    echo 'Welcome ' . $firstname . ' Admin';
+                    // You can echo other user data fields as needed
+                } else {
+                    // Redirect to the login form if the user is not logged in
+                    header("Location: login_form.php");
+                    exit();
+                }
+            ?>
 			</a>
 		</nav>
 		<!-- NAVBAR -->
