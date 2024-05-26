@@ -1,5 +1,6 @@
 <?php
-include('config.php');
+session_start();
+include 'config.php';
 
 if (isset($_GET['id'])) {
     $id = $_GET['id'];

@@ -3,11 +3,11 @@ define('DBINFO', 'mysql:host=localhost;dbname=user_db');
 define('DBUSER', 'root');
 define('DBPASS', '');
 
-// Define $conn as a global variable
-global $conn;
+// // Define $conn as a global variable
+// global $conn;
 
 // Establish a MySQLi connection
-$conn = new mysqli("localhost", DBUSER, DBPASS, "user_db");
+$conn = new mysqli("localhost", "root", "", "user_db");
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
@@ -36,15 +36,20 @@ function fetchAll($query) {
     global $conn; // Access the global $conn variable
 
     try {
-        $pdo = new PDO(DBINFO, DBUSER, DBPASS);
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $stmt = $pdo->query($query);
-        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $result = $conn->query($query);
+        if (!$result) {
+            die("Query failed: " . $conn->error);
+        }
+        $results = [];
+        while ($row = $result->fetch_assoc()) {
+            $results[] = $row;
+        }
         return $results;
-    } catch (PDOException $e) {
-        die("Connection failed: " . $e->getMessage());
+    } catch (Exception $e) {
+        die("Query execution failed: " . $e->getMessage());
     }
 }
+
 ?>
 <style>
  .error {

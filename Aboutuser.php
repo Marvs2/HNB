@@ -71,7 +71,7 @@
                     <li class="nav-item"><a class="nav-link" href="index.php" style="font-size: 10px; color:white;">Home</a></li>
                     <li class="nav-item"><a class="nav-link" href="Aboutus3.php" style="font-size: 10px; color:white;">Deceased</a></li>
                     <li class="nav-item"><a class="nav-link" href="Aboutuser.php" style="font-size: 10px; color:white;">About Us</a></li>
-                    <li class="nav-item"><a class="nav-link" href="login_form.php" style="font-size: 10px; color:white;">Login</a></li>
+                    <li class="nav-item"><a class="nav-link" href="loginform.php" style="font-size: 10px; color:white;">Login</a></li>
                 </ul>
             </div>
         </div>

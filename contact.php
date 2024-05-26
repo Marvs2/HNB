@@ -20,9 +20,9 @@ session_start();
         <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d5801.809947650999!2d121.04995534561812!3d14.682603960843778!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3397b0cb260299bf%3A0x9dcfa64b6e999995!2sHimlayang%20Pilipino%2C%20Inc.%20-%20Memorial%20Park%20Office!5e0!3m2!1sen!2sph!4v1714648726015!5m2!1sen!2sph" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
     </div>
 </body>
-</html> -->
+</html>  -->
 
-<!DOCTYPE html>
+<!--<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -236,7 +236,7 @@ session_start();
         <button class="btn btn4" id="modalBtn4">+</button>
     </div>
 
-    <!-- Modals for the map -->
+     Modals for the map 
     <div id="myModal1" class="modal">
         <div class="modal-content">
             <span class="close" data-modal="myModal1">&times;</span>
@@ -282,7 +282,7 @@ session_start();
             <div class="image-container">
                 <img src="img_snow.jpg" alt="Snow" style="width: 100%; height: auto;">
                 <div class="grid-container">
-                    <!-- 6x10 grid of buttons -->
+                     6x10 grid of buttons 
                     <script>
                         for (let i = 0; i < 60; i++) {
                             document.write('<button>+</button>');
@@ -341,4 +341,4 @@ session_start();
         }
     </script>
 </body>
-</html>
+</html>-->
