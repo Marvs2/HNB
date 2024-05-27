@@ -41,7 +41,6 @@ if (isset($_SESSION['user_id'])) {
 	<!-- SIDEBAR -->
 	<section id="sidebar">
 		<a href="index2.php" class="brand">
-			<i class=''><b> HNB </b></i>
 			<span class="text" style="padding-left: 15px;"> Himlayan ng Bayan</span>
 		</a>
 		<ul class="side-menu top">
@@ -72,7 +71,13 @@ if (isset($_SESSION['user_id'])) {
 			<li class="active">
 				<a href="list.php">
 					<i class='bx bx-list-ul'></i>
-					<span class="text">Request</span>
+					<span class="text">List</span>
+				</a>
+			</li>
+			<li>
+				<a href="messages.php">
+					<i class='bx bx-list-ul'></i>
+					<span class="text">Messages</span>
 				</a>
 			</li>
 		</ul>
@@ -118,39 +123,38 @@ if (isset($_SESSION['user_id'])) {
 					<section class="jumbotron text-center">
 						<div class="container">
 							<?php
-// Establish connection to the database
-$conn = mysqli_connect("localhost", "root", "", "user_db");
+								// Establish connection to the database
+								$conn = mysqli_connect("localhost", "root", "", "user_db");
 
-// Check the connection
-if (!$conn) {
-    die("Connection failed: " . mysqli_connect_error());
-}
+								// Check the connection
+								if (!$conn) {
+									die("Connection failed: " . mysqli_connect_error());
+								}
 
-function fetchReq($query, $conn) {
-    $result = mysqli_query($conn, $query);
-    $all = mysqli_fetch_all($result, MYSQLI_ASSOC);
-    return $all;
-}
+								function fetchReq($query, $conn) {
+									$result = mysqli_query($conn, $query);
+									$all = mysqli_fetch_all($result, MYSQLI_ASSOC);
+									return $all;
+								}
 
-$query = "SELECT * FROM requests";
-$results = fetchReq($query, $conn);
-if(count($results) > 0) {
-    foreach($results as $row) {
-        ?>
-        <h1 class="jumbotron-heading"><?php echo $row['email'] ?></h1>
-        <p class="lead text-muted"><?php echo $row['message'] ?></p>
-        <p>
-            <a href="accept.php?id=<?php echo $row['id'] ?>" class="btn-accept">Accept</a>
-            <a href="reject.php?id=<?php echo $row['id']; ?>" class="btn btn-danger btn-sm btn-delete" style="background-color: rgb(221, 67, 67); color: aliceblue;">Reject</a>
-        </p>
-        <small><i><?php echo $row['date'] ?></i></small>
-        <?php
-    }
-} else {
-    echo "No Pending Requests.";
-}
-?>
-
+								$query = "SELECT * FROM client_form WHERE status = 'Inactive'";
+								$results = fetchReq($query, $conn);
+								if (count($results) > 0) {
+									foreach ($results as $row) {
+										?>
+										<h1 class="jumbotron-heading"><?php echo $row['email'] ?></h1>
+										<p class="lead text-muted"><?php echo $row['status'] ?></p>
+										<p>
+											<a href="accept.php?id=<?php echo $row['id'] ?>" class="btn-accept">Accept</a>
+											<a href="reject.php?id=<?php echo $row['id']; ?>" class="btn btn-danger btn-sm btn-delete" style="background-color: rgb(221, 67, 67); color: aliceblue;">Reject</a>
+										</p>
+										<small><i><?php echo $row['date'] ?></i></small>
+										<?php
+									}
+								} else {
+									echo "No Inactive Requests.";
+								}
+								?>
 						  
 						</div>
 						<?php

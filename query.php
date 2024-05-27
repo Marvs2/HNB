@@ -90,7 +90,11 @@ function get_client_data($client_id) {
             'id' => $row['id'],
             'position' => $row['position'],
             'firstname' => $row['firstname'],
+            'middlename' => $row['middlename'],
             'lastname' => $row['lastname'],
+            'email' => $row['email'],
+            'contact' => $row['contact'],
+            'status' => $row['status'],
             'clientNum' => $row['clientnum'], // Ensure this field is correct
             // Add other fields as needed
         );
@@ -242,6 +246,26 @@ function get_data_by_area($areaOneId) {
 // Fetch data for a specific area
 $areaOneId = 1; // Example value
 $area_data = get_data_by_area($areaOneId);
+
+
+function getAdminResponses($message_id) {
+    global $conn;
+
+    // Query to select admin responses for a specific message
+    $query = "SELECT `id`, `admin_id`, `response_message`, `response_date` FROM `admin_responses` WHERE `message_id` = $message_id ORDER BY `response_date` DESC";
+
+    // Perform the query
+    $result = mysqli_query($conn, $query);
+
+    // Check if query failed
+    if (!$result) {
+        die("Query failed: " . mysqli_error($conn));
+    }
+
+    // Return the result set
+    return $result;
+}
+// Function to insert data into admin_responses table
 
 // function get_client_data($client_id) {
 //     // Prepare the query to select user data based on the user ID

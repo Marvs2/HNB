@@ -40,7 +40,6 @@ if (isset($_SESSION['user_id'])) {
 <!-- SIDEBAR -->
 <section id="sidebar">
     <a href="index2.php" class="brand">
-        <i class=''><b> HNB </b></i>
         <span class="text" style="padding-left: 15px;"> Himlayan ng Bayan</span>
     </a>
     <ul class="side-menu top">
@@ -71,7 +70,13 @@ if (isset($_SESSION['user_id'])) {
         <li>
             <a href="list.php">
                 <i class='bx bx-list-ul'></i>
-                <span class="text">Request</span>
+                <span class="text">List</span>
+            </a>
+        </li>
+        <li>
+            <a href="messages.php">
+                <i class='bx bx-list-ul'></i>
+                <span class="text">Messages</span>
             </a>
         </li>
     </ul>
