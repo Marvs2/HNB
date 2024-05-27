@@ -3,10 +3,12 @@ session_start();
 include 'config.php';
 include 'query.php'; // Ensure this includes the performQuery function and get_client_data function
 
+// Check if the user is logged in
 if (isset($_SESSION['client_id'])) {
     $client_id = $_SESSION['client_id'];
     $client_data = get_client_data($client_id);
 
+    // If user data exists
     if ($client_data !== null) {
         $firstname = $client_data['firstname'];
         $lastname = $client_data['lastname'];
@@ -17,9 +19,24 @@ if (isset($_SESSION['client_id'])) {
     }
 }
 
-$area_data = get_data_by_area($areaOneId);
-?>
+function viewMessages() {
+    global $conn; // Assuming $conn is your database connection variable
 
+    // Query to select messages
+    $query = "SELECT `id`, `fullname`, `gmail`, `subject`, `number`, `message`, `remarks`, `ClientNum` FROM `messages` WHERE 1";
+    
+    // Perform the query
+    $result = mysqli_query($conn, $query);
+
+    // Check if query failed
+    if (!$result) {
+        die("Query failed: " . mysqli_error($conn));
+    }
+
+    // Return the result set
+    return $result;
+}
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -55,7 +72,7 @@ $area_data = get_data_by_area($areaOneId);
             border: none;
             cursor: pointer;
             border-radius: 25%;
-            width: 40px;
+            width: 60px;
             height: 40px;
             text-align: center;
             line-height: 20px;
@@ -167,7 +184,7 @@ $area_data = get_data_by_area($areaOneId);
         <span class="text" style="padding-left: 15px;"> Himlayan ng Bayan</span>
     </a>
     <ul class="side-menu top">
-        <li class="active">
+        <li>
             <a href="clientindex.php">
                 <i class='bx bxs-dashboard'></i>
                 <span class="text">Dashboard</span>
@@ -185,7 +202,7 @@ $area_data = get_data_by_area($areaOneId);
                 <span class="text">List</span>
             </a>
         </li>
-        <li>
+        <li class="active">
             <a href="clientmessage.php">
                 <i class='bx bx-street-view'></i>
                 <span class="text">Message</span>
@@ -208,7 +225,6 @@ $area_data = get_data_by_area($areaOneId);
     </ul>
 </section>
 <!-- SIDEBAR -->
-
 <!-- CONTENT -->
 <section id="content">
     <!-- MAIN -->
@@ -232,232 +248,117 @@ $area_data = get_data_by_area($areaOneId);
             </div>
         </div>
 
-        <ul class="box-info">
-            <li>
-                <i class='bx bxs-calendar-check'></i>
-                <span class="text">
-                    <p>Deceased Counts: <?php echo htmlspecialchars($clientNum); ?>: <?php echo $areano1_data_length; ?></p>
-                </span>
-            </li>
-            <li>
-                <i class='bx bxs-group'></i>
-                <span class="text">
-                    <?php echo $requests_count; ?>
-                    <p>Requests: <?php echo $requests_count; ?></p>
-                </span>
-            </li>
-            <li>
-                <i class='bx bxs-calendar-check'></i>
-                <span class="text">
-                    <?php echo $dpersons_count; ?>
-                    <p>Deceased Counts: <?php echo $dpersons_count; ?></p>
-                </span>
-            </li>
-            <li>
-                <i class='bx bxs-group'></i>
-                <span class="text">
-                    <?php echo $requests_count; ?>
-                    <p>Requests: <?php echo $requests_count; ?></p>
-                </span>
-            </li>
-        </ul>
-
         <div class="table-data">
-            <div>
-                <?php if ($client_data !== null) : ?>
-                    <h2>Client Data</h2>
-                    <p>First Name: <?php echo htmlspecialchars($client_data['firstname']); ?></p>
-                    <p>Last Name: <?php echo htmlspecialchars($client_data['lastname']); ?></p>
-                    <p>Number of records with clientNum <?php echo htmlspecialchars($clientNum); ?>: <?php echo $areano1_data_length; ?></p>
-                
-                    <?php if ($areano1_data_length > 0) : ?>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Area One ID</th>
-                                    <th>Client Num</th>
-                                    <th>DP Num</th>
-                                    <th>First Name</th>
-                                    <th>Last Name</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($areano1_data as $row) : ?>
-                                    <tr>
-                                        <td><?php echo htmlspecialchars($row['areaOneId']); ?></td>
-                                        <td><?php echo htmlspecialchars($row['clientNum']); ?></td>
-                                        <td><?php echo htmlspecialchars($row['dpNum']); ?></td>
-                                        <td><?php echo htmlspecialchars($row['firstname']); ?></td>
-                                        <td><?php echo htmlspecialchars($row['lastname']); ?></td>
-                                        <td><button onclick="showGraveDetails(<?php echo $row['areaOneId']; ?>)">View</button></td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
-                    <?php else : ?>
-                        <p>No records found for clientNum <?php echo htmlspecialchars($clientNum); ?></p>
-                    <?php endif; ?>
-                <?php else : ?>
-                    <p>User is not logged in or no user data found!</p>
-                <?php endif; ?>
-                </div>
-            
-            <div class="todo">
-                <div class="container">
-                            <!-- single canvas node to render the chart -->
-                            <canvas
-                              id="myChart"
-                              width="350"
-                              height="500"
-                              aria-label="chart"
-                              role="img"
-                            ></canvas>
-                </div>
-                <script src="js/chart.js"></script>
-                <script src="js/custom.js"></script>    
-            
-            </div>
+            <!-- Table container -->
             <div class="container">
-                <h1>Himalyang Pilipino Memorial Park Map</h1>
-                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d5801.809947650999!2d121.04995534561812!3d14.682603960843778!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3397b0cb260299bf%3A0x9dcfa64b6e999995!2sHimlayang%20Pilipino%2C%20Inc.%20-%20Memorial%20Park%20Office!5e0!3m2!1sen!2sph!4v1714648726015!5m2!1sen!2sph&gestureHandling=none&scrollwheel=false&disableDefaultUI=true" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-                <button class="btn btn1" id="modalBtn1">A1</button>
+                <?php
+                // Call the viewMessages function to get the query result
+                $result = viewMessages();
+                
+// Check if there are any messages
+if (mysqli_num_rows($result) > 0) {
+    // Output table header
+    echo "<table id='messageTable' class='display' style='width:100%;'>
+            <thead>
+                <tr>
+                    <th style='display: none;'>ID</th>
+                    <th style='padding: 10px;'>Full Name</th>
+                    <th style='padding: 10px;'>Email</th>
+                    <th style='padding: 10px;'>Subject</th>
+                    <th style='padding: 10px;'>Number</th>
+                    <th style='padding: 10px;'>Message</th>
+                    <th style='padding: 10px;'>Remarks</th>
+                    <th style='padding: 10px;'>ClientNum</th>
+                    <th style='padding: 10px;'>Action</th>
+                </tr>
+            </thead>
+            <tbody>";
+
+            // Output table rows
+            while ($row = mysqli_fetch_assoc($result)) {
+                echo "<tr>";
+                echo "<td style='display: none;'>" . $row['id'] . "</td>";
+                echo "<td style='padding: 10px;'>" . $row['fullname'] . "</td>";
+                echo "<td style='padding: 10px;'>" . $row['gmail'] . "</td>";
+                echo "<td style='padding: 10px;'>" . $row['subject'] . "</td>";
+                echo "<td style='padding: 10px;'>" . $row['number'] . "</td>";
+                echo "<td style='padding: 10px;'>" . $row['message'] . "</td>";
+                echo "<td style='padding: 10px;'>" . $row['remarks'] . "</td>";
+                echo "<td style='padding: 10px;'>" . $row['ClientNum'] . "</td>";
+                echo "<td style='padding: 10px;'><button class='btn view-btn' data-message-id='" . $row['id'] . "'>View</button></td>"; // View button
+                echo "</tr>";
+            }
+
+            // Close table
+            echo "</tbody></table>";
+        } else {
+            // No messages found
+            echo "No messages found.";
+        }
+                
+                // Free result set
+                mysqli_free_result($result);
+                ?>
             </div>
-        
-            <!-- Modals for the map -->
-            <div id="myModal1" class="modal">
+        </div>
+
+         <!-- Modal HTML Structure -->
+         <div class="modal fade" id="messageDetailsModal" tabindex="-1" role="dialog" aria-labelledby="messageDetailsModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
                 <div class="modal-content">
-                    <div class="image-container" style="position: relative; width: 100%;">
-                        <h2>Modal Content for Area One</h2>
-                        <img src="uploaded_img/AreaOne.png" alt="Snow" style="max-width: 100%; max-height: 100%;">
-                        
-                        <!-- Generate buttons dynamically based on data -->
-                        <?php foreach ($area_data as $index => $row): ?>
-                            <?php if ($index < 30): // Limit to 30 buttons ?>
-                                <div style="position: absolute; top: <?= 10 + (intdiv($index, 6) * 10) ?>%; left: <?= 10 + (($index % 6) * 10) ?>%; width: 0; height: 0;">
-                                    <button class="modal-button" 
-                                            style="width: 20px; height: 20px;" 
-                                            data-clientNum="<?= htmlspecialchars($row['clientNum']) ?>" 
-                                            data-dpNum="<?= htmlspecialchars($row['dpNum']) ?>" 
-                                            data-firstname="<?= htmlspecialchars($row['firstname']) ?>" 
-                                            data-lastname="<?= htmlspecialchars($row['lastname']) ?>"
-                                            data-graveNo="<?= htmlspecialchars($row['graveNo']) ?>"
-                                            data-dateofBirth="<?= htmlspecialchars($row['dateofBirth']) ?>"
-                                            data-dateOfDeath="<?= htmlspecialchars($row['dateOfDeath']) ?>"
-                                            data-dateofBuried="<?= htmlspecialchars($row['dateofBuried']) ?>"
-                                            data-status="<?= htmlspecialchars($row['status']) ?>"
-                                            data-statCol="<?= htmlspecialchars($row['statCol']) ?>"
-                                            data-areaNo="<?= htmlspecialchars($row['areaNo']) ?>"
-                                            data-graveType="<?= htmlspecialchars($row['graveType']) ?>"
-                                            data-buriedStatus="<?= htmlspecialchars($row['buriedStatus']) ?>"
-                                            data-maintenanceStatus="<?= htmlspecialchars($row['maintenanceStatus']) ?>"
-                                            data-lastMaintenanceDate="<?= htmlspecialchars($row['lastMaintenanceDate']) ?>"
-                                            onclick="showGraveDetails(this)">
-                                        <?= $row['graveNo'] ?>
-                                    </button>
-                                </div>
-                            <?php endif; ?>
-                        <?php endforeach; ?>
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="messageDetailsModalLabel">Message Details</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
-                    
-                    <span class="close" id="closeModal1">&times;</span>
+                    <div class="modal-body">
+                        <!-- Content to be loaded dynamically via AJAX -->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
                 </div>
             </div>
-
-<!-- Modal HTML Structure -->
-<div class="modal fade" id="graveDetailsModal" tabindex="-1" role="dialog" aria-labelledby="graveDetailsModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="graveDetailsModalLabel">Grave Details</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p><strong>First Name:</strong> <span id="modalFirstName"></span></p>
-                <p><strong>Last Name:</strong> <span id="modalLastName"></span></p>
-                <p><strong>Client Number:</strong> <span id="modalClientNum"></span></p>
-                <p><strong>DP Number:</strong> <span id="modalDpNum"></span></p>
-                <p><strong>Grave Number:</strong> <span id="modalGraveNo"></span></p>
-                <p><strong>Date of Birth:</strong> <span id="modalDateOfBirth"></span></p>
-                <p><strong>Date of Death:</strong> <span id="modalDateOfDeath"></span></p>
-                <p><strong>Date of Buried:</strong> <span id="modalDateOfBuried"></span></p>
-                <p><strong>Status:</strong> <span id="modalStatus"></span></p>
-                <p><strong>Status Column:</strong> <span id="modalStatCol"></span></p>
-                <p><strong>Area Number:</strong> <span id="modalAreaNo"></span></p>
-                <p><strong>Grave Type:</strong> <span id="modalGraveType"></span></p>
-                <p><strong>Buried Status:</strong> <span id="modalBuriedStatus"></span></p>
-                <p><strong>Maintenance Status:</strong> <span id="modalMaintenanceStatus"></span></p>
-                <p><strong>Last Maintenance Date:</strong> <span id="modalLastMaintenanceDate"></span></p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            </div>
         </div>
-    </div>
-</div>
-
-        </div>
-        <div id="clientData"></div>
     </main>
     <!-- MAIN -->
 </section>
 <!-- CONTENT -->
-     <script>
-        var modal1 = document.getElementById("myModal1");
-        var btn1 = document.getElementById("modalBtn1");
-        var span1 = document.getElementById("closeModal1");
 
-        btn1.onclick = function() {
-            modal1.style.display = "block";
-        }
+<!-- Include Bootstrap CSS -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
-        span1.onclick = function() {
-            modal1.style.display = "none";
-        }
+<!-- Include jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-        window.onclick = function(event) {
-            if (event.target == modal1) {
-                modal1.style.display = "none";
+<!-- Include DataTables JavaScript -->
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+
+<!-- Include Bootstrap JavaScript -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<!-- Your custom JavaScript -->
+
+<script>
+    $(document).ready(function() {
+    // Add click event to open modal when view button is clicked
+    $('.view-btn').click(function() {
+        var messageId = $(this).data('message-id');
+        $.ajax({
+            url: 'fetch_admin_responses.php', // Update to the correct PHP file handling admin responses
+            type: 'POST',
+            data: { messageId: messageId }, // Pass the messageId to the PHP script
+            success: function(response) {
+                $('#messageDetailsModal .modal-body').html(response); // Update the modal body content
+                $('#messageDetailsModal').modal('show');
             }
-        }
+        });
+    });
+});
 
-        function showGraveDetails(button) {
-            var clientNum = button.getAttribute('data-clientNum');
-            var dpNum = button.getAttribute('data-dpNum');
-            var firstname = button.getAttribute('data-firstname');
-            var lastname = button.getAttribute('data-lastname');
-            var graveNo = button.getAttribute('data-graveNo');
-            var dateofBirth = button.getAttribute('data-dateofBirth');
-            var dateOfDeath = button.getAttribute('data-dateOfDeath');
-            var dateofBuried = button.getAttribute('data-dateofBuried');
-            var status = button.getAttribute('data-status');
-            var statCol = button.getAttribute('data-statCol');
-            var areaNo = button.getAttribute('data-areaNo');
-            var graveType = button.getAttribute('data-graveType');
-            var buriedStatus = button.getAttribute('data-buriedStatus');
-            var maintenanceStatus = button.getAttribute('data-maintenanceStatus');
-            var lastMaintenanceDate = button.getAttribute('data-lastMaintenanceDate');
+</script>
 
-            alert("Grave Details:\n" +
-                "Client Number: " + clientNum + "\n" +
-                "DP Number: " + dpNum + "\n" +
-                "First Name: " + firstname + "\n" +
-                "Last Name: " + lastname + "\n" +
-                "Grave Number: " + graveNo + "\n" +
-                "Date of Birth: " + dateofBirth + "\n" +
-                "Date of Death: " + dateofDeath + "\n" +
-                "Date of Buried: " + dateofBuried + "\n" +
-                "Status: " + status + "\n" +
-                "Status Color: " + statCol + "\n" +
-                "Area Number: " + areaNo + "\n" +
-                "Grave Type: " + graveType + "\n" +
-                "Buried Status: " + buriedStatus + "\n" +
-                "Maintenance Status: " + maintenanceStatus + "\n" +
-                "Last Maintenance Date: " + lastMaintenanceDate);
-        }
-    </script>
-<script src="script2.js"></script>
 </body>
 </html>
+

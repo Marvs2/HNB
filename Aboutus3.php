@@ -7,7 +7,6 @@ $search = "";
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $search = trim($_POST['search']);
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -68,7 +67,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <div class="card-body">
                     <form method="POST" action="">
                         <div class="input-group mb-3">
-                            <input type="text" class="form-control" placeholder="Search by name..." name="search" value="<?php echo $search; ?>">
+                            <input type="text" class="form-control" placeholder="Search by name..." name="search" value="<?php echo $search ?? ''; ?>">
                             <div class="input-group-append">
                                 <button class="btn btn-primary" type="submit">Search</button>
                             </div>
@@ -87,7 +86,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         if (!empty($search)) {
                             $conn = mysqli_connect("localhost", "root", "", "user_db");
                             $search = mysqli_real_escape_string($conn, $search);
-                            $query = "SELECT * FROM dperson WHERE firstname LIKE '%$search%' OR lastname LIKE '%$search%' OR middlename LIKE '%$search%'";
+                            $query = "SELECT * FROM areano1 WHERE firstname LIKE '%$search%' OR lastname LIKE '%$search%' OR middlename LIKE '%$search%'";
                             $query_run = mysqli_query($conn, $query);
 
                             if (mysqli_num_rows($query_run) > 0) {
@@ -103,8 +102,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                                data-darea="Area: <?php echo ceil($dperson['graveNo'] / 60) ?>"
                                                data-graveno="Graveyard: <?php echo $dperson['graveNo'] ?>"
                                                data-name="<?php echo $dperson['firstname'] . ' ' . $dperson['lastname'] . ' ' . $dperson['middlename'] ?>"
-                                               data-death="<?php echo $dperson['dofDeath'] ?>"
-                                               data-birth="<?php echo $dperson['dofBirth'] ?>"
+                                               data-death="<?php echo $dperson['dateOfDeath'] ?>"
+                                               data-birth="<?php echo $dperson['dateofBirth'] ?>"
                                                data-dareaimg="images/area<?php echo $index + 1 ?>.webp" href="#">View</a>
                                         </td>
                                     </tr>

@@ -3,6 +3,11 @@ session_start();
 include 'config.php';
 include 'query.php'; // Ensure this includes the performQuery function and get_client_data function
 
+
+$client_data = null;
+$areano1_data = [];
+$areano1_data_length = 0;
+
 if (isset($_SESSION['client_id'])) {
     $client_id = $_SESSION['client_id'];
     $client_data = get_client_data($client_id);
@@ -10,11 +15,20 @@ if (isset($_SESSION['client_id'])) {
     if ($client_data !== null) {
         $firstname = $client_data['firstname'];
         $lastname = $client_data['lastname'];
+        $middlename = $client_data['middlename'];
         $clientNum = $client_data['clientNum'];
+        $email = $client_data['email'];
+        $contact = $client_data['contact'];
 
         $areano1_data = check_client_exists_in_areano1($clientNum);
         $areano1_data_length = count($areano1_data);
+    } else {
+        header("Location: loginform.php");
+        exit();
     }
+} else {
+    header("Location: loginform.php");
+    exit();
 }
 
 $area_data = get_data_by_area($areaOneId);
@@ -27,137 +41,15 @@ $area_data = get_data_by_area($areaOneId);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Boxicons -->
+    <!-- Bootstrap and Boxicons -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="css/index2/css/style2.css">
-    <!-- My CSS -->
     <link rel="stylesheet" href="css/index2/css/style.css">
-    <style>
-        .container {
-            position: relative;
-            width: 750px;
-            height: 700px;
-            margin: auto;
-        }
-
-        .container iframe {
-            width: 100%;
-            height: 100%;
-        }
-
-        .btn {
-            position: absolute;
-            background-color: blue;
-            color: white;
-            font-size: 14px;
-            padding: 10px;
-            border: none;
-            cursor: pointer;
-            border-radius: 25%;
-            width: 40px;
-            height: 40px;
-            text-align: center;
-            line-height: 20px;
-        }
-
-        .btn:hover {
-            background-color: darkblue;
-        }
-
-        .btn1 {
-            top: 44%;
-            left: 47%;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgb(0, 0, 0);
-            background-color: rgba(0, 0, 0, 0.4);
-        }
-
-        .modal-content {
-            background-color: #fefefe;
-            margin: auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 50%;
-            max-width: 800px;
-            min-height: 400px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
-
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
-
-        .image-container {
-            position: relative;
-            width: 100%;
-            text-align: center;
-        }
-        .image-container img {
-            max-width: 80%;
-            height: auto;
-        }
-
-        .modal-button:hover {
-            background-color: #d4ac0d;
-        }
-
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 10px;
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 50%;
-        }
-
-        .grid-container button {
-            width: 40px;
-            height: 40px;
-            background-color: blue;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .grid-container button:nth-child(odd) {
-            background-color: #4CAF50;
-        }
-
-        .grid-container button:nth-child(even) {
-            background-color: #2196F3;
-        }
-
-    </style>
     <title>Deceased Person - Dashboard</title>
+    <style>
+        /* Additional CSS for layout and styling */
+    </style>
 </head>
 <body>
 
@@ -168,33 +60,33 @@ $area_data = get_data_by_area($areaOneId);
     </a>
     <ul class="side-menu top">
         <li class="active">
-            <a href="clientindex.php">
+            <a href="clientindex.php"><!--near half 25%--> 
                 <i class='bx bxs-dashboard'></i>
                 <span class="text">Dashboard</span>
             </a>
         </li>
         <li>
-            <a href="clientapplication.php">
+            <a href="clientapplication.php"><!--Nearly Done 80%--> 
                 <i class='bx bxs-edit-location'></i>
                 <span class="text">Application</span>
             </a>
         </li>
         <li>
-            <a href="clientlist.php">
+            <a href="clientlist.php"><!--Working on it 15% -->
                 <i class='bx bx-folder-plus'></i>
                 <span class="text">List</span>
             </a>
         </li>
         <li>
-            <a href="clientmessage.php">
+            <a href="clientmessage.php"><!--Nearly Done 75%--> 
                 <i class='bx bx-street-view'></i>
                 <span class="text">Message</span>
             </a>
         </li>
         <li>
-            <a href="clienthistory2.php">
+            <a href="clienthistory2.php"> <!--Maybe Info about the other inquiry?? -->
                 <i class='bx bx-list-ul'></i>
-                <span class="text">History</span>
+                <span class="text">Direction</span>
             </a>
         </li>
     </ul>
@@ -211,24 +103,10 @@ $area_data = get_data_by_area($areaOneId);
 
 <!-- CONTENT -->
 <section id="content">
-    <!-- MAIN -->
     <main>
         <div class="head-title">
             <div class="left">
-                <h1>
-                    <?php
-                    // Check if the user is logged in
-                    if (isset($firstname)) {
-                        // Display user information if logged in
-                        echo 'Welcome ' . $firstname;
-                        // You can echo other user data fields as needed
-                    } else {
-                        // Redirect to the login form if the user is not logged in
-                        header("Location: loginform.php");
-                        exit();
-                    }
-                    ?>
-                </h1>
+                <h1>Welcome <?php echo htmlspecialchars($firstname); ?></h1>
             </div>
         </div>
 
@@ -242,222 +120,203 @@ $area_data = get_data_by_area($areaOneId);
             <li>
                 <i class='bx bxs-group'></i>
                 <span class="text">
-                    <?php echo $requests_count; ?>
                     <p>Requests: <?php echo $requests_count; ?></p>
                 </span>
             </li>
             <li>
                 <i class='bx bxs-calendar-check'></i>
                 <span class="text">
-                    <?php echo $dpersons_count; ?>
                     <p>Deceased Counts: <?php echo $dpersons_count; ?></p>
-                </span>
-            </li>
-            <li>
-                <i class='bx bxs-group'></i>
-                <span class="text">
-                    <?php echo $requests_count; ?>
-                    <p>Requests: <?php echo $requests_count; ?></p>
                 </span>
             </li>
         </ul>
 
         <div class="table-data">
             <div>
-                <?php if ($client_data !== null) : ?>
-                    <h2>Client Data</h2>
-                    <p>First Name: <?php echo htmlspecialchars($client_data['firstname']); ?></p>
-                    <p>Last Name: <?php echo htmlspecialchars($client_data['lastname']); ?></p>
-                    <p>Number of records with clientNum <?php echo htmlspecialchars($clientNum); ?>: <?php echo $areano1_data_length; ?></p>
-                
-                    <?php if ($areano1_data_length > 0) : ?>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Area One ID</th>
-                                    <th>Client Num</th>
-                                    <th>DP Num</th>
-                                    <th>First Name</th>
-                                    <th>Last Name</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($areano1_data as $row) : ?>
-                                    <tr>
-                                        <td><?php echo htmlspecialchars($row['areaOneId']); ?></td>
-                                        <td><?php echo htmlspecialchars($row['clientNum']); ?></td>
-                                        <td><?php echo htmlspecialchars($row['dpNum']); ?></td>
-                                        <td><?php echo htmlspecialchars($row['firstname']); ?></td>
-                                        <td><?php echo htmlspecialchars($row['lastname']); ?></td>
-                                        <td><button onclick="showGraveDetails(<?php echo $row['areaOneId']; ?>)">View</button></td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
-                    <?php else : ?>
-                        <p>No records found for clientNum <?php echo htmlspecialchars($clientNum); ?></p>
-                    <?php endif; ?>
-                <?php else : ?>
-                    <p>User is not logged in or no user data found!</p>
-                <?php endif; ?>
+                <h2>Dp List Data</h2>
+
+                <?php if ($areano1_data_length > 0) : ?>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Client Num</th>
+                            <th>DP Num</th>
+                            <th>First Name</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($areano1_data as $row) : 
+                            $buriedDate = new DateTime($row['dateofBuried']);
+                            $currentDate = new DateTime();
+                            $interval = $currentDate->diff($buriedDate);
+                            $years = $interval->y;
+                            $months = $interval->m;
+                            $days = $interval->d;
+                            
+                            if ($years >= 5) {
+                                $alertClass = 'alert-danger';
+                                $alertMessage = 'More than 5 years';
+                            } elseif ($years >= 1) {
+                                $alertClass = 'alert-warning';
+                                $alertMessage = 'More than 1 year';
+                            } elseif ($months >= 1) {
+                                $alertClass = 'alert-info';
+                                $alertMessage = 'More than 1 month';
+                            } else {
+                                $alertClass = 'alert-success';
+                                $alertMessage = 'Less than a month';
+                            }
+                        ?>
+                            <tr>
+                                <td><?php echo htmlspecialchars($row['clientNum']); ?></td>
+                                <td><?php echo htmlspecialchars($row['dpNum']); ?></td>
+                                <td><?php echo htmlspecialchars($row['firstname']); ?></td>
+                                <td>
+                                    <button class="viewDetails" 
+                                        data-toggle="modal" 
+                                        data-target="#graveDetailsModal"
+                                        data-clientnum="<?php echo htmlspecialchars($row['clientNum']); ?>"
+                                        data-dpnum="<?php echo htmlspecialchars($row['dpNum']); ?>"
+                                        data-firstname="<?php echo htmlspecialchars($row['firstname']); ?>"
+                                        data-lastname="<?php echo htmlspecialchars($row['lastname']); ?>"
+                                        data-graveno="<?php echo htmlspecialchars($row['graveNo']); ?>"
+                                        data-dateofbirth="<?php echo htmlspecialchars($row['dateofBirth']); ?>"
+                                        data-dateofdeath="<?php echo htmlspecialchars($row['dateOfDeath']); ?>"
+                                        data-dateofburied="<?php echo htmlspecialchars($row['dateofBuried']); ?>"
+                                        data-status="<?php echo htmlspecialchars($row['status']); ?>"
+                                        data-statcol="<?php echo htmlspecialchars($row['statCol']); ?>"
+                                        data-areano="<?php echo htmlspecialchars($row['areaNo']); ?>"
+                                        data-gravetype="<?php echo htmlspecialchars($row['graveType']); ?>"
+                                        data-buriedstatus="<?php echo htmlspecialchars($row['buriedStatus']); ?>"
+                                        data-maintenancestatus="<?php echo htmlspecialchars($row['maintenanceStatus']); ?>"
+                                        data-lastmaintenancedate="<?php echo htmlspecialchars($row['lastMaintenanceDate']); ?>"
+                                        data-alertclass="<?php echo $alertClass; ?>"
+                                        data-alertmessage="<?php echo $alertMessage; ?>"
+                                        data-yearssinceburial="<?php echo $years; ?>"
+                                        data-monthssinceburial="<?php echo $months; ?>"
+                                        data-dayssinceburial="<?php echo $days; ?>"
+                                    >View</button>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>                        
+                    </tbody>
+                </table>
+            <?php else : ?>
+                <p>No records found for clientNum <?php echo htmlspecialchars($clientNum); ?></p>
+            <?php endif; ?>
+            </div>
+            
+            <!-- Modal HTML Structure -->
+            <div class="modal fade" id="graveDetailsModal" tabindex="-1" role="dialog" aria-labelledby="graveDetailsModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="graveDetailsModalLabel">Grave Details</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p><strong>First Name:</strong> <span id="modalFirstName"></span></p>
+                                    <p><strong>Last Name:</strong> <span id="modalLastName"></span></p>
+                                    <p><strong>Client Number:</strong> <span id="modalClientNum"></span></p>
+                                    <p><strong>DP Number:</strong> <span id="modalDpNum"></span></p>
+                                    <p><strong>Grave Number:</strong> <span id="modalGraveNo"></span></p>
+                                    <p><strong>Date of Birth:</strong> <span id="modalDateofBirth"></span></p>
+                                    <p><strong>Date of Death:</strong> <span id="modalDateOfDeath"></span></p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p><strong>Date of Buried:</strong> <span id="modalDateofBuried"></span></p>
+                                    <p><strong>Status:</strong> <span id="modalStatus"></span></p>
+                                    <p><strong>Status Column:</strong> <span id="modalStatCol"></span></p>
+                                    <p><strong>Area Number:</strong> <span id="modalAreaNo"></span></p>
+                                    <p><strong>Grave Type:</strong> <span id="modalGraveType"></span></p>
+                                    <p><strong>Buried Status:</strong> <span id="modalBuriedStatus"></span></p>
+                                    <p><strong>Maintenance Status:</strong> <span id="modalMaintenanceStatus"></span></p>
+                                    <p><strong>Last Maintenance Date:</strong> <span id="modalLastMaintenanceDate"></span></p>
+                                </div>
+                            </div>
+                            <div class="alert" id="modalAlert" role="alert">
+                                <span id="modalAlertMessage"></span>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
                 </div>
+            </div>
+            
             
             <div class="todo">
                 <div class="container">
-                            <!-- single canvas node to render the chart -->
-                            <canvas
-                              id="myChart"
-                              width="350"
-                              height="500"
-                              aria-label="chart"
-                              role="img"
-                            ></canvas>
+                    <canvas id="myChart" width="350" height="500" aria-label="chart" role="img"></canvas>
                 </div>
-                <script src="js/chart.js"></script>
+                <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
                 <script src="js/custom.js"></script>    
-            
-            </div>
-            <div class="container">
-                <h1>Himalyang Pilipino Memorial Park Map</h1>
-                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d5801.809947650999!2d121.04995534561812!3d14.682603960843778!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3397b0cb260299bf%3A0x9dcfa64b6e999995!2sHimlayang%20Pilipino%2C%20Inc.%20-%20Memorial%20Park%20Office!5e0!3m2!1sen!2sph!4v1714648726015!5m2!1sen!2sph&gestureHandling=none&scrollwheel=false&disableDefaultUI=true" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-                <button class="btn btn1" id="modalBtn1">A1</button>
-            </div>
-        
-            <!-- Modals for the map -->
-            <div id="myModal1" class="modal">
-                <div class="modal-content">
-                    <div class="image-container" style="position: relative; width: 100%;">
-                        <h2>Modal Content for Area One</h2>
-                        <img src="uploaded_img/AreaOne.png" alt="Snow" style="max-width: 100%; max-height: 100%;">
-                        
-                        <!-- Generate buttons dynamically based on data -->
-                        <?php foreach ($area_data as $index => $row): ?>
-                            <?php if ($index < 30): // Limit to 30 buttons ?>
-                                <div style="position: absolute; top: <?= 10 + (intdiv($index, 6) * 10) ?>%; left: <?= 10 + (($index % 6) * 10) ?>%; width: 0; height: 0;">
-                                    <button class="modal-button" 
-                                            style="width: 20px; height: 20px;" 
-                                            data-clientNum="<?= htmlspecialchars($row['clientNum']) ?>" 
-                                            data-dpNum="<?= htmlspecialchars($row['dpNum']) ?>" 
-                                            data-firstname="<?= htmlspecialchars($row['firstname']) ?>" 
-                                            data-lastname="<?= htmlspecialchars($row['lastname']) ?>"
-                                            data-graveNo="<?= htmlspecialchars($row['graveNo']) ?>"
-                                            data-dateofBirth="<?= htmlspecialchars($row['dateofBirth']) ?>"
-                                            data-dateOfDeath="<?= htmlspecialchars($row['dateOfDeath']) ?>"
-                                            data-dateofBuried="<?= htmlspecialchars($row['dateofBuried']) ?>"
-                                            data-status="<?= htmlspecialchars($row['status']) ?>"
-                                            data-statCol="<?= htmlspecialchars($row['statCol']) ?>"
-                                            data-areaNo="<?= htmlspecialchars($row['areaNo']) ?>"
-                                            data-graveType="<?= htmlspecialchars($row['graveType']) ?>"
-                                            data-buriedStatus="<?= htmlspecialchars($row['buriedStatus']) ?>"
-                                            data-maintenanceStatus="<?= htmlspecialchars($row['maintenanceStatus']) ?>"
-                                            data-lastMaintenanceDate="<?= htmlspecialchars($row['lastMaintenanceDate']) ?>"
-                                            onclick="showGraveDetails(this)">
-                                        <?= $row['graveNo'] ?>
-                                    </button>
-                                </div>
-                            <?php endif; ?>
-                        <?php endforeach; ?>
-                    </div>
-                    
-                    <span class="close" id="closeModal1">&times;</span>
-                </div>
-            </div>
-
-<!-- Modal HTML Structure -->
-<div class="modal fade" id="graveDetailsModal" tabindex="-1" role="dialog" aria-labelledby="graveDetailsModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="graveDetailsModalLabel">Grave Details</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p><strong>First Name:</strong> <span id="modalFirstName"></span></p>
-                <p><strong>Last Name:</strong> <span id="modalLastName"></span></p>
-                <p><strong>Client Number:</strong> <span id="modalClientNum"></span></p>
-                <p><strong>DP Number:</strong> <span id="modalDpNum"></span></p>
-                <p><strong>Grave Number:</strong> <span id="modalGraveNo"></span></p>
-                <p><strong>Date of Birth:</strong> <span id="modalDateOfBirth"></span></p>
-                <p><strong>Date of Death:</strong> <span id="modalDateOfDeath"></span></p>
-                <p><strong>Date of Buried:</strong> <span id="modalDateOfBuried"></span></p>
-                <p><strong>Status:</strong> <span id="modalStatus"></span></p>
-                <p><strong>Status Column:</strong> <span id="modalStatCol"></span></p>
-                <p><strong>Area Number:</strong> <span id="modalAreaNo"></span></p>
-                <p><strong>Grave Type:</strong> <span id="modalGraveType"></span></p>
-                <p><strong>Buried Status:</strong> <span id="modalBuriedStatus"></span></p>
-                <p><strong>Maintenance Status:</strong> <span id="modalMaintenanceStatus"></span></p>
-                <p><strong>Last Maintenance Date:</strong> <span id="modalLastMaintenanceDate"></span></p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>
-    </div>
-</div>
-
-        </div>
-        <div id="clientData"></div>
     </main>
-    <!-- MAIN -->
 </section>
-<!-- CONTENT -->
-     <script>
-        var modal1 = document.getElementById("myModal1");
-        var btn1 = document.getElementById("modalBtn1");
-        var span1 = document.getElementById("closeModal1");
 
-        btn1.onclick = function() {
-            modal1.style.display = "block";
-        }
+<!-- Ensure jQuery and Bootstrap JavaScript are included -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-        span1.onclick = function() {
-            modal1.style.display = "none";
-        }
+<script>
+   $(document).ready(function() {
+    $('.viewDetails').on('click', function() {
+        var clientNum = $(this).data('clientnum');
+        var dpNum = $(this).data('dpnum');
+        var firstName = $(this).data('firstname');
+        var lastName = $(this).data('lastname');
+        var graveNo = $(this).data('graveno');
+        var dateofBirth = $(this).data('dateofbirth');
+        var dateOfDeath = $(this).data('dateofdeath');
+        var dateofBuried = $(this).data('dateofburied');
+        var status = $(this).data('status');
+        var statCol = $(this).data('statcol');
+        var areaNo = $(this).data('areano');
+        var graveType = $(this).data('gravetype');
+        var buriedStatus = $(this).data('buriedstatus');
+        var maintenanceStatus = $(this).data('maintenancestatus');
+        var lastMaintenanceDate = $(this).data('lastmaintenancedate');
+        var alertClass = $(this).data('alertclass');
+        var alertMessage = $(this).data('alertmessage');
 
-        window.onclick = function(event) {
-            if (event.target == modal1) {
-                modal1.style.display = "none";
-            }
-        }
+        $('#modalClientNum').text(clientNum);
+        $('#modalDpNum').text(dpNum);
+        $('#modalFirstName').text(firstName);
+        $('#modalLastName').text(lastName);
+        $('#modalGraveNo').text(graveNo);
+        $('#modalDateofBirth').text(dateofBirth);
+        $('#modalDateOfDeath').text(dateOfDeath);
+        $('#modalDateofBuried').text(dateofBuried);
+        $('#modalStatus').text(status);
+        $('#modalStatCol').text(statCol);
+        $('#modalAreaNo').text(areaNo);
+        $('#modalGraveType').text(graveType);
+        $('#modalBuriedStatus').text(buriedStatus);
+        $('#modalMaintenanceStatus').text(maintenanceStatus);
+        $('#modalLastMaintenanceDate').text(lastMaintenanceDate);
 
-        function showGraveDetails(button) {
-            var clientNum = button.getAttribute('data-clientNum');
-            var dpNum = button.getAttribute('data-dpNum');
-            var firstname = button.getAttribute('data-firstname');
-            var lastname = button.getAttribute('data-lastname');
-            var graveNo = button.getAttribute('data-graveNo');
-            var dateofBirth = button.getAttribute('data-dateofBirth');
-            var dateOfDeath = button.getAttribute('data-dateOfDeath');
-            var dateofBuried = button.getAttribute('data-dateofBuried');
-            var status = button.getAttribute('data-status');
-            var statCol = button.getAttribute('data-statCol');
-            var areaNo = button.getAttribute('data-areaNo');
-            var graveType = button.getAttribute('data-graveType');
-            var buriedStatus = button.getAttribute('data-buriedStatus');
-            var maintenanceStatus = button.getAttribute('data-maintenanceStatus');
-            var lastMaintenanceDate = button.getAttribute('data-lastMaintenanceDate');
+        $('#modalAlert').removeClass('alert-danger alert-warning alert-info alert-success').addClass(alertClass);
+        $('#modalAlertMessage').text(alertMessage);
 
-            alert("Grave Details:\n" +
-                "Client Number: " + clientNum + "\n" +
-                "DP Number: " + dpNum + "\n" +
-                "First Name: " + firstname + "\n" +
-                "Last Name: " + lastname + "\n" +
-                "Grave Number: " + graveNo + "\n" +
-                "Date of Birth: " + dateofBirth + "\n" +
-                "Date of Death: " + dateofDeath + "\n" +
-                "Date of Buried: " + dateofBuried + "\n" +
-                "Status: " + status + "\n" +
-                "Status Color: " + statCol + "\n" +
-                "Area Number: " + areaNo + "\n" +
-                "Grave Type: " + graveType + "\n" +
-                "Buried Status: " + buriedStatus + "\n" +
-                "Maintenance Status: " + maintenanceStatus + "\n" +
-                "Last Maintenance Date: " + lastMaintenanceDate);
-        }
-    </script>
+        $('#graveDetailsModal').modal('show');
+    });
+
+    // Close the modal when the user clicks the close button
+    $('.close').on('click', function() {
+        $('#graveDetailsModal').modal('hide');
+    });
+});
+
+</script>
+
 <script src="script2.js"></script>
 </body>
 </html>

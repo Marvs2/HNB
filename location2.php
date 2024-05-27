@@ -58,7 +58,6 @@ if (isset($_SESSION['user_id'])) {
 	<!-- SIDEBAR -->
 	<section id="sidebar">
 		<a href="index2.php" class="brand">
-			<i class=''><b> HNB </b></i>
 			<span class="text" style="padding-left: 15px;"> Himlayan ng Bayan</span>
 		</a>
 		<ul class="side-menu top">

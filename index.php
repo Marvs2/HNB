@@ -93,7 +93,7 @@
 <body>
     <nav class="navbar navbar-light navbar-expand-lg fixed-top bg- #000d1a clean-navbar" style="background-color: #032030;">
         <div class="container">
-            <a class="navbar-brand logo" href="#" style="font-family: Arial, sans-serif font-weight: bold; font-size:20px; color:white;">Himlayan ng Bayan</a>
+            <a class="navbar-brand logo" href="#" style="font-family: Arial; sans-serif font-weight: bold; font-size:20px; color:white;">Himlayan ng Bayan</a>
             <div class="collapse navbar-collapse" id="navcol-1">
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item"><a class="nav-link" href="index.php" style="font-size: 10px; color:white;">Home</a></li>

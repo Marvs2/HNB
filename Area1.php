@@ -86,6 +86,17 @@ foreach ($client_data as &$data) {
             cursor: pointer;
             border-radius: 40%;
         }
+        .blue-button {
+  background-color: blue;
+  color: white;
+  /* Add more styles as needed */
+}
+
+.green-button {
+  background-color: green;
+  color: white;
+  /* Add more styles as needed */
+}
         .modal {
             display: none;
             position: fixed;
@@ -105,12 +116,12 @@ foreach ($client_data as &$data) {
             padding: 20px;
             border: 1px solid #888;
             width: 100%;
-            height: 100%;
+            height: 80%;
         }
         .modal-content img {
             display: flex;
             width: 100%;
-            height: 70%; /* Ensure the container takes the full height of the viewport */
+            height: 90%; /* Ensure the container takes the full height of the viewport */
         }
 
         .close {
@@ -125,6 +136,30 @@ foreach ($client_data as &$data) {
             text-decoration: none;
             cursor: pointer;
         }
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .alert-info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .alert-warning {
+            background-color: #fff3cd;
+            color: #856404;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
@@ -137,50 +172,77 @@ foreach ($client_data as &$data) {
         </div>
     </div>
 
-    <!-- Main Modal for Button A1 -->
-    <div id="myModal1" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal('myModal1')">&times;</span>
-            <h2>Area 1 Details</h2>
-            <img src="uploaded_img/AreaOne.png" alt="Area 1" style="max-width: 1000vh; max-height: 1000vh;">
-            <!-- Add circular buttons for Area 1 modal content -->
-            <?php for ($i = 1; $i <= 30; $i++): ?>
-                <?php $top = isset($positions[$i]['top']) ? $positions[$i]['top'] : ''; ?>
-                <?php $left = isset($positions[$i]['left']) ? $positions[$i]['left'] : ''; ?>
-                <div style="position: absolute; top: <?php echo $top; ?>%; left: <?php echo $left; ?>%; width: 0; height: 0;">
-                    <button class="modal-button" onclick="openModal('graveModal<?php echo $i; ?>')"><?php echo $i; ?></button>
-                </div>
-            <?php endfor; ?>
-        </div>
+   <!-- Main Modal for Button A1 -->
+<div id="myModal1" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal('myModal1')">&times;</span>
+      <h2>Area 1 Details</h2>
+      <img src="uploaded_img/AreaOne.png" alt="Area 1" style="max-width: 1000vh; max-height: 1000vh;">
+      <!-- Add circular buttons for Area 1 modal content -->
+      <?php for ($i = 1; $i <= 30; $i++): ?>
+      <?php
+      $data = isset($client_data[$i - 1]) ? $client_data[$i - 1] : null;
+      $top = isset($positions[$i]['top']) ? $positions[$i]['top'] : '';
+      $left = isset($positions[$i]['left']) ? $positions[$i]['left'] : '';
+      ?>
+      <div style="position: absolute; top: <?php echo $top; ?>%; left: <?php echo $left; ?>%; width: 0; height: 0;">
+        <button class="modal-button <?php echo ($data) ? 'blue-button' : 'green-button'; ?>" onclick="openModal('graveModal<?php echo $i; ?>')"><?php echo $i; ?></button>
+      </div>
+      <?php endfor; ?>
     </div>
-
-    <!-- Modals for each grave number -->
-    <?php for ($i = 1; $i <= 30; $i++): ?>
-        <?php $data = isset($client_data[$i - 1]) ? $client_data[$i - 1] : null; ?>
-        <div id="graveModal<?php echo $i; ?>" class="modal">
-            <div class="modal-content">
-                <span class="close" onclick="closeModal('graveModal<?php echo $i; ?>')">&times;</span>
-                <h2>Details for Grave No <?php echo $i; ?></h2>
-                <?php if ($data): ?>
-                    <p>First Name: <?php echo $data['firstname']; ?></p>
-                    <p>Last Name: <?php echo $data['lastname']; ?></p>
-                    <p>Middle Name: <?php echo $data['middlename']; ?></p>
-                    <p>Date of Birth: <?php echo $data['dateofBirth']; ?></p>
-                    <p>Date of Death: <?php echo $data['dateOfDeath']; ?></p>
-                    <p>Date of Buried: <?php echo $data['dateofBuried']; ?></p>
-                    <p>Status: <?php echo $data['status']; ?></p>
-                    <p>Stat Col: <?php echo $data['statCol']; ?></p>
-                    <p>Area No: <?php echo $data['areaNo']; ?></p>
-                    <p>Grave Type: <?php echo $data['graveType']; ?></p>
-                    <p>Buried Status: <?php echo $data['buriedStatus']; ?></p>
-                    <p>Maintenance Status: <?php echo $data['maintenanceStatus']; ?></p>
-                    <p>Last Maintenance Date: <?php echo $data['lastMaintenanceDate']; ?></p>
-                <?php else: ?>
-                    <p>No data available for this grave.</p>
-                <?php endif; ?>
-            </div>
-        </div>
-    <?php endfor; ?>
+  </div>
+<!-- Modals for each grave number -->
+<?php for ($i = 1; $i <= 30; $i++): ?>
+<?php $data = isset($client_data[$i - 1]) ? $client_data[$i - 1] : null; ?>
+<div id="graveModal<?php echo $i; ?>" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal('graveModal<?php echo $i; ?>')">&times;</span>
+    <h2>Details for Grave No <?php echo $i; ?></h2>
+    <?php if ($data): ?>
+    <p>First Name: <?php echo $data['firstname']; ?></p>
+    <p>Last Name: <?php echo $data['lastname']; ?></p>
+    <p>Middle Name: <?php echo $data['middlename']; ?></p>
+    <p>Date of Birth: <?php echo $data['dateofBirth']; ?></p>
+    <p>Date of Death: <?php echo $data['dateOfDeath']; ?></p>
+    <p>Date of Buried: <?php echo $data['dateofBuried']; ?></p>
+    <p>Status: <?php echo $data['status']; ?></p>
+    <p>Stat Col: <?php echo $data['statCol']; ?></p>
+    <p>Area No: <?php echo $data['areaNo']; ?></p>
+    <p>Grave Type: <?php echo $data['graveType']; ?></p>
+    <p>Buried Status: <?php echo $data['buriedStatus']; ?></p>
+    <p>Maintenance Status: <?php echo $data['maintenanceStatus']; ?></p>
+    <p>Last Maintenance Date: <?php echo $data['lastMaintenanceDate']; ?></p>
+    <?php
+    $buriedDate = new DateTime($data['dateofBuried']);
+    $currentDate = new DateTime();
+    $interval = $currentDate->diff($buriedDate);
+    $years = $interval->y;
+    $months = $interval->m;
+    $days = $interval->d;
+    if ($years >= 5) {
+        $alertClass = 'alert-danger';
+        $alertMessage = 'More than 5 years';
+    } elseif ($years >= 1) {
+        $alertClass = 'alert-warning';
+        $alertMessage = 'More than 1 year';
+    } elseif ($months >= 1) {
+        $alertClass = 'alert-info';
+        $alertMessage = 'More than 1 month';
+    } else {
+        $alertClass = 'alert-success';
+        $alertMessage = 'Less than a month';
+    }
+    ?>
+    <div class="<?php echo $alertClass; ?>">
+      <p><?php echo $alertMessage; ?> since buried: <?php echo $years; ?> years, <?php echo $months; ?> months, <?php echo $days; ?> days.</p>
+    </div>
+    <?php else: ?>
+    <p>No data available for this grave.</p>
+    <?php endif; ?>
+    <button id="graveButton<?php echo $i; ?>" class="<?php echo ($data) ? 'blue-button' : 'green-button'; ?>" onclick="showModal('graveModal<?php echo $i; ?>')">Show Details</button>
+  </div>
+</div>
+<?php endfor; ?>
 
     <script>
         // Function to open modals
