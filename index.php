@@ -93,7 +93,7 @@
 <body>
     <nav class="navbar navbar-light navbar-expand-lg fixed-top bg- #000d1a clean-navbar" style="background-color: #032030;">
         <div class="container">
-            <a class="navbar-brand logo" href="#" style="font-family: Arial; sans-serif font-weight: bold; font-size:20px; color:white;">Himlayan ng Bayan</a>
+        <a class="navbar-brand logo" href="#" style="font-family: Arial, sans-serif; font-weight: bold; font-size: 20px; color: white;">Himlayan ng Bayan</a>
             <div class="collapse navbar-collapse" id="navcol-1">
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item"><a class="nav-link" href="index.php" style="font-size: 10px; color:white;">Home</a></li>
@@ -107,7 +107,7 @@
     <div class="page landing-page">
         <section class="clean-block clean-hero" style="background-image:url('assets/img/homepage.jpg'); color:rgba(9, 162, 255, 0); background-size: cover; background-position: center;">
             <div class="text" style="color: black;">
-                <h2>Find a grave</h2>
+                <h2>Find a grave MARVIN!!</h2>
                 <p>Register the grave of your loved one for easy search and tracking of their grave</p>
             </div>
         </section>
