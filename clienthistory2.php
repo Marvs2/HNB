@@ -40,121 +40,39 @@ $area_data = get_data_by_area($areaOneId);
             height: 100%;
             margin: auto;
         }
+        
+  .grid-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 10px;
+    background-color: #f1f1f1;
+    padding: 10px;
+  }
+  .grid-container h1 {
+    color: #e6e6e6
+  }
 
-        .container iframe {
-            width: 100%;
-            height: 100%;
-        }
+  .grid-item {
+    background-color: #e6e6e6;
+    padding: 20px;
+    text-align: center;
+  }
 
-        .btn {
-            position: absolute;
-            background-color: blue;
-            color: white;
-            font-size: 14px;
-            padding: 10px;
-            border: none;
-            cursor: pointer;
-            border-radius: 25%;
-            width: 40px;
-            height: 40px;
-            text-align: center;
-            line-height: 20px;
-        }
+  .video-container {
+    position: relative;
+    width: 100%;
+    height: 25%;
+    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+    background-color: #000;
+  }
 
-        .btn:hover {
-            background-color: darkblue;
-        }
-
-        .btn1 {
-            top: 44%;
-            left: 47%;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgb(0, 0, 0);
-            background-color: rgba(0, 0, 0, 0.4);
-        }
-
-        .modal-content {
-            background-color: #fefefe;
-            margin: auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 50%;
-            max-width: 800px;
-            min-height: 400px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
-
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
-
-        .image-container {
-            position: relative;
-            width: 100%;
-            text-align: center;
-        }
-        .image-container img {
-            max-width: 80%;
-            height: auto;
-        }
-
-        .modal-button:hover {
-            background-color: #d4ac0d;
-        }
-
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 10px;
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 50%;
-        }
-
-        .grid-container button {
-            width: 40px;
-            height: 40px;
-            background-color: blue;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .grid-container button:nth-child(odd) {
-            background-color: #4CAF50;
-        }
-
-        .grid-container button:nth-child(even) {
-            background-color: #2196F3;
-        }
+  .video-container video {
+    position: absolute;
+    top: 35%;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
 
     </style>
     <title>Deceased Person - Dashboard</title>
@@ -236,111 +154,63 @@ $area_data = get_data_by_area($areaOneId);
             
             <div class="todo">
                 <div class="container">
-                    <div class="button-container">
-                        <button data-area="Area1">Area1</button>
-                        <button data-area="Area2">Area2</button>
-                        <button data-area="Area3">Area3</button>
-                        <button data-area="Area4">Area4</button>
-                        <button data-area="Area5">Area5</button>
-                        <button data-area="Area6">Area6</button>
-                        <button data-area="Area7">Area7</button>
-                        <button data-area="Area8">Area8</button>
-                    </div>
-                    
-                    <!-- Modals -->
-                    <div id="modalArea1" class="modal">
-                        <div class="modal-content">
-                            <span class="close" data-area="Area1">&times;</span>
-                            <div class="video-container">
-                                <video controls>
-                                    <source src="video/AreaOneDirection.mp4" type="video/mp4">
-                                    Your browser does not support the video tag.
-                                </video>
-                            </div>
+                    <div class="grid-container">
+                        <div class="grid-item video-container">
+                            <h1>Area 1</h1>
+                          <video controls>
+                            <source src="video/AreaOneDirection.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                          </video>
                         </div>
-                    </div>
-                    
-                    <div id="modalArea2" class="modal">
-                        <div class="modal-content">
-                            <span class="close" data-area="Area2">&times;</span>
-                            <div class="video-container">
-                                <video controls>
-                                    <source src="video2.mp4" type="video/mp4">
-                                    Your browser does not support the video tag.
-                                </video>
-                            </div>
+                      
+                        <div class="grid-item video-container">
+                            <h1>Area 2</h1>
+                            <video controls>
+                              <source src="video/AreaTwoDirection.mp4" type="video/mp4">
+                              Your browser does not support the video tag.
+                            </video>
                         </div>
-                    </div>
-                    
-                    <div id="modalArea3" class="modal">
-                        <div class="modal-content">
-                            <span class="close" data-area="Area3">&times;</span>
-                            <div class="video-container">
-                                <video controls>
-                                    <source src="video3.mp4" type="video/mp4">
-                                    Your browser does not support the video tag.
-                                </video>
-                            </div>
+                        <div class="grid-item video-container">
+                            <h1>Area 3</h1>
+                            <video controls>
+                              <source src="video/AreaTwoDirection.mp4" type="video/mp4">
+                              Your browser does not support the video tag.
+                              </video>
                         </div>
-                    </div>
-                    
-                    <div id="modalArea4" class="modal">
-                        <div class="modal-content">
-                            <span class="close" data-area="Area4">&times;</span>
-                            <div class="video-container">
-                                <video controls>
-                                    <source src="video4.mp4" type="video/mp4">
-                                    Your browser does not support the video tag.
-                                </video>
-                            </div>
+                        <div class="grid-item video-container">
+                            <h1>Area 4</h1>
+                            <video controls>
+                              <source src="video/AreaTwoDirection.mp4" type="video/mp4">
+                              Your browser does not support the video tag.
+                              </video>
                         </div>
-                    </div>
-                    
-                    <div id="modalArea5" class="modal">
-                        <div class="modal-content">
-                            <span class="close" data-area="Area5">&times;</span>
-                            <div class="video-container">
-                                <video controls>
-                                    <source src="video5.mp4" type="video/mp4">
-                                    Your browser does not support the video tag.
-                                </video>
-                            </div>
+                        <div class="grid-item video-container">
+                            <h1>Area 5</h1>
+                            <video controls>
+                              <source src="video/AreaTwoDirection.mp4" type="video/mp4">
+                              Your browser does not support the video tag.
+                              </video>
                         </div>
-                    </div>
-                    
-                    <div id="modalArea6" class="modal">
-                        <div class="modal-content">
-                            <span class="close" data-area="Area6">&times;</span>
-                            <div class="video-container">
-                                <video controls>
-                                    <source src="video6.mp4" type="video/mp4">
-                                    Your browser does not support the video tag.
-                                </video>
-                            </div>
+                        <div class="grid-item video-container">
+                            <h1>Area 6</h1>
+                            <video controls>
+                              <source src="video/AreaTwoDirection.mp4" type="video/mp4">
+                              Your browser does not support the video tag.
+                              </video>
                         </div>
-                    </div>
-                    
-                    <div id="modalArea7" class="modal">
-                        <div class="modal-content">
-                            <span class="close" data-area="Area7">&times;</span>
-                            <div class="video-container">
-                                <video controls>
-                                    <source src="video7.mp4" type="video/mp4">
-                                    Your browser does not support the video tag.
-                                </video>
-                            </div>
+                        <div class="grid-item video-container">
+                            <h1>Area 7</h1>
+                            <video controls>
+                              <source src="video/AreaTwoDirection.mp4" type="video/mp4">
+                              Your browser does not support the video tag.
+                              </video>
                         </div>
-                    </div>
-                    
-                    <div id="modalArea8" class="modal">
-                        <div class="modal-content">
-                            <span class="close" data-area="Area8">&times;</span>
-                            <div class="video-container">
-                                <video controls>
-                                    <source src="video8.mp4" type="video/mp4">
-                                    Your browser does not support the video tag.
-                                </video>
-                            </div>
+                        <div class="grid-item video-container">
+                            <h1>Area 8</h1>
+                            <video controls>
+                              <source src="video/AreaTwoDirection.mp4" type="video/mp4">
+                              Your browser does not support the video tag.
+                              </video>
                         </div>
                     </div>
                 </div>

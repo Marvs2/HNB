@@ -18,6 +18,63 @@ if (isset($_SESSION['user_id'])) {
 } else {
     echo "User is not logged in!";
 }
+
+function countRowsWithAndWithoutData($conn, $tableName) {
+    $queryWithData = "SELECT COUNT(*) as rowsWithData FROM $tableName WHERE dpNum IS NOT NULL";
+    $resultWithData = $conn->query($queryWithData);
+    $rowWithData = $resultWithData->fetch_assoc()['rowsWithData'];
+
+    // Count the total number of rows
+    $queryTotalRows = "SELECT COUNT(*) as totalRows FROM $tableName";
+    $resultTotalRows = $conn->query($queryTotalRows);
+    $totalRows = $resultTotalRows->fetch_assoc()['totalRows'];
+
+    // Calculate rows without data as totalRows - 30
+    $rowWithoutData = 30 - $totalRows ;
+
+    return array(
+        'rowsWithData' => $rowWithData,
+        'rowsWithoutData' => $rowWithoutData,
+        'totalRows' => $totalRows
+    );
+}
+
+$conn = mysqli_connect("localhost", "root", "", "user_db");
+
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+#inactive account
+$query = "SELECT COUNT(*) as inactiveCount FROM client_form WHERE status = 'Inactive'";
+$result = mysqli_query($conn, $query);
+$row = mysqli_fetch_assoc($result);
+$requests_count = $row['inactiveCount'];
+
+
+$tableNames = array('areano1', 'areano2', 'areano3', 'areano4', 'areano5', 'areano6', 'areano7', 'areano8');
+$tableData = array();
+
+$totalRowsWithData = 0;
+$totalRowsWithoutData = 0;
+
+foreach ($tableNames as $tableName) {
+    $rowCount = countRowsWithAndWithoutData($conn, $tableName);
+
+    // Calculate the percentage occupancy
+    $percentageOccupancy = ($rowCount['rowsWithData'] / 30) * 100;
+
+    $tableData[] = array(
+        'tableName' => $tableName,
+        'rowCount' => $rowCount,
+        'percentageOccupancy' => $percentageOccupancy
+    );
+
+    $totalRowsWithData += $rowCount['rowsWithData'];
+    $totalRowsWithoutData += $rowCount['rowsWithoutData'];
+}
+
+$conn->close();
 ?> 
 
 <!DOCTYPE html>
@@ -32,7 +89,7 @@ if (isset($_SESSION['user_id'])) {
     <link rel="stylesheet" href="css/index2/css/style2.css">
     <!-- My CSS -->
     <link rel="stylesheet" href="css/index2/css/style.css">
-
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
     <title>Deceased Person - Dashboard</title>
 </head>
 <body>
@@ -132,10 +189,17 @@ if (isset($_SESSION['user_id'])) {
 
         <ul class="box-info">
             <li>
-                <i class='bx bxs-calendar-check'></i>
+                <i class='bx bxs-group'></i>
                 <span class="text">
-                    <?php echo $dpersons_count; ?>
-                    <p>Deceased Counts: <?php echo $dpersons_count; ?></p>
+                    <?php echo $totalRowsWithData; ?>
+                    <p>Total: <?php echo $totalRowsWithData; ?></p>
+                </span>
+            </li>
+            <li>
+                <i class='bx bxs-group'></i>
+                <span class="text">
+                    <?php echo $totalRowsWithoutData; ?>
+                    <p>Avalable:<?php echo $totalRowsWithoutData; ?></p>
                 </span>
             </li>
             <li>
@@ -149,59 +213,36 @@ if (isset($_SESSION['user_id'])) {
 
         <div class="table-data">
             <div class="order">
+                <div id="chartsContainer" style="height: 450px; width: 100%;"></div>
+                <br>
+                <h4>Occupancy Percentage</h4>
                 <table>
                     <thead>
                         <tr>
-                            <th></th>
-                            <th></th>
-                            <th></th>
+                            <th>Area</th>
+                            <th>Total Rows</th>
+                            <th>Rows With Data</th>
+                            <th>Rows Without Data</th>
+                            <th>Percentage Occupancy</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php
-                        $dataPoints = array(); // Initialize an empty array to store data
-                        
-                        $conn = mysqli_connect("localhost", "root", "", "user_db");
-                        $query = "SELECT * FROM dperson ORDER BY graveNo ASC";
-                        
-                        $query_run = mysqli_query($conn, $query);
-                        
-                        $count = 0;
-                        while ($row = mysqli_fetch_assoc($query_run)) {
-                            // Build the data array with fname, lname, and mname in graveno
-                            $dataPoints[$count]['label']=$row['firstname'] . ' ' . $row['lastname'];
-                            $dataPoints[$count]['y']=(float)$row['graveNo'];
-                            $count=$count+1;
-                        }
-                        ?>
-                        
-                        <script>
-                        window.onload = function() {
-                            var chart = new CanvasJS.Chart("chartContainer", {
-                                animationEnabled: true,
-                                theme: "light2",
-                                title: {
-                                    text: "Grave Track"
-                                },
-                                axisY: {
-                                    title: "Grave (#)"
-                                },
-                                data: [{
-                                    type: "column",
-                                    yValueFormatString: " Grave #",
-                                    dataPoints: <?php echo json_encode($dataPoints, JSON_NUMERIC_CHECK); ?>
-                                }]
-                            });
-                            chart.render();
-                        }
-                        </script>
-                        <div id="chartContainer" style="height: 370px; width: 100%;"></div>
-                        <script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
+                        <?php foreach ($tableData as $data): ?>
+                            <tr>
+                                <td><?php echo $data['tableName']; ?></td>
+                                <td><?php echo $data['rowCount']['totalRows']; ?></td>
+                                <td><?php echo $data['rowCount']['rowsWithData']; ?></td>
+                                <td><?php echo $data['rowCount']['rowsWithoutData']; ?></td>
+                                <td><?php echo number_format($data['percentageOccupancy'], 2); ?>%</td>
+                            </tr>
+                        <?php endforeach; ?>
                     </tbody>
                 </table>
             </div>
             <div class="todo">
+
                 <div class="container">
+                    <h2>Total Per Area</h2>
                             <!-- single canvas node to render the chart -->
                             <canvas
                               id="myChart"
@@ -221,7 +262,30 @@ if (isset($_SESSION['user_id'])) {
     <!-- MAIN -->
 </section>
 <!-- CONTENT -->
+<script>
+        window.onload = function() {
+            var dataPoints = [
+                <?php foreach ($tableData as $data): ?>
+                    { label: "<?php echo $data['tableName']; ?>", y: <?php echo $data['percentageOccupancy']; ?> },
+                <?php endforeach; ?>
+            ];
 
+            var chart = new CanvasJS.Chart("chartsContainer", {
+                animationEnabled: true,
+                theme: "light2",
+                title: {
+                    text: "Occupancy Percentage"
+                },
+                data: [{
+                    type: "pie",
+                    yValueFormatString: "#,##0.00\"%\"",
+                    indexLabel: "{label} ({y})",
+                    dataPoints: dataPoints
+                }]
+            });
+            chart.render();
+        }
+    </script>
 <script src="script2.js"></script>
 </body>
 </html>

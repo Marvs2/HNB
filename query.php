@@ -150,55 +150,6 @@ function check_client_exists_in_areano1($clientNum) {
     return $client_areaNo_data;
 }
 
-#============================30 per row==============================================#
-function get_client_data_for_grave_numbers($graveNumbers) {
-    // Prepare the query to fetch client data for given grave numbers
-    $placeholders = implode(',', array_fill(0, count($graveNumbers), '?'));
-    $query = "SELECT * FROM areano1 WHERE graveNo IN ($placeholders)";
-    
-    // Execute the query with the grave numbers as parameters
-    $result = performQuery($query, $graveNumbers);
-
-    // Initialize an array to store client data
-    $client_data = [];
-
-    // Check if there are any rows returned
-    if ($result->num_rows > 0) {
-        // Loop through the result set and fetch each row
-        while ($row = $result->fetch_assoc()) {
-            // Construct an associative array with client data for each row
-            $client_row = array(
-                'areaOneId' => $row['areaOneId'],
-                'clientNum' => $row['clientNum'],
-                'dpNum' => $row['dpNum'],
-                'firstname' => $row['firstname'],
-                'lastname' => $row['lastname'],
-                'middlename' => $row['middlename'],
-                'graveNo' => $row['graveNo'],
-                'dateofBirth' => $row['dateofBirth'],
-                'dateOfDeath' => $row['dateOfDeath'],
-                'dateofBuried' => $row['dateofBuried'],
-                'status' => $row['status'],
-                'statCol' => $row['statCol'],
-                'areaNo' => $row['areaNo'],
-                'graveType' => $row['graveType'],
-                'buriedStatus' => $row['buriedStatus'],
-                'maintenanceStatus' => $row['maintenanceStatus'],
-                'lastMaintenanceDate' => $row['lastMaintenanceDate'],
-            );
-
-            // Push the client data array into the main client_data array
-            $client_data[] = $client_row;
-        }
-    }
-
-    // Return the client data array
-    return $client_data;
-}
-
-
-
-
 function get_data_by_area($areaOneId) {
     // Prepare the query to fetch data based on areaOneId
     $query = "SELECT * FROM areano1 WHERE areaOneId = ?";
@@ -246,6 +197,56 @@ function get_data_by_area($areaOneId) {
 // Fetch data for a specific area
 $areaOneId = 1; // Example value
 $area_data = get_data_by_area($areaOneId);
+#==============================================================================
+#area 2
+function get_data_by_area2($areaTwoId) {
+    // Prepare the query to fetch data based on areaOneId
+    $query = "SELECT * FROM areano2 WHERE areaTwoId = ?";
+    // Execute the query with the areaOneId as the parameter
+    $result = performQuery($query, [$areaTwoId]);
+
+    // Initialize an array to store the data
+    $datatwo = [];
+
+    // Check if there is at least one row returned
+    if ($result->num_rows > 0) {
+        // Loop through the result set and fetch each row
+        while ($row = $result->fetch_assoc()) {
+            // Construct an associative array with data for each row
+            $data_row = array(
+                'areaTwoId' => $row['areaTwoId'],
+                'clientNum' => $row['clientNum'],
+                'dpNum' => $row['dpNum'],
+                'firstname' => $row['firstname'],
+                'lastname' => $row['lastname'],
+                'middlename' => $row['middlename'],
+                'graveNo' => $row['graveNo'],
+                'dateofBirth' => $row['dateofBirth'],
+                'dateOfDeath' => $row['dateOfDeath'],
+                'dateofBuried' => $row['dateofBuried'],
+                'status' => $row['status'],
+                'statCol' => $row['statCol'],
+                'areaNo' => $row['areaNo'],
+                'graveType' => $row['graveType'],
+                'buriedStatus' => $row['buriedStatus'],
+                'maintenanceStatus' => $row['maintenanceStatus'],
+                'maintenanceStatusDate' => $row['maintenanceStatusDate'],
+                // Add other fields as needed
+            );
+
+            // Push the data array into the main data array
+            $datatwo[] = $data_row;
+        }
+    }
+
+    // Return the data array
+    return $datatwo;
+}
+
+// Fetch data for a specific area
+$areaTwoId = 2; // Example value
+$area_data = get_data_by_area2($areaTwoId);
+
 
 
 function getAdminResponses($message_id) {
@@ -265,6 +266,384 @@ function getAdminResponses($message_id) {
     // Return the result set
     return $result;
 }
+
+
+
+
+
+
+
+#=========================================================================#
+#1
+function get_client_data_for_grave_numbers($graveNumbers) {
+    // Prepare the query to fetch client data for given grave numbers
+    $placeholders = implode(',', array_fill(0, count($graveNumbers), '?'));
+    $query = "SELECT * FROM areano1 WHERE graveNo IN ($placeholders)";
+    
+    // Execute the query with the grave numbers as parameters
+    $result = performQuery($query, $graveNumbers);
+
+    // Initialize an array to store client data
+    $client_data = [];
+
+    // Check if there are any rows returned
+    if ($result->num_rows > 0) {
+        // Loop through the result set and fetch each row
+        while ($row = $result->fetch_assoc()) {
+            // Construct an associative array with client data for each row
+            $client_row = array(
+                'areaOneId' => $row['areaOneId'],
+                'clientNum' => $row['clientNum'],
+                'dpNum' => $row['dpNum'],
+                'firstname' => $row['firstname'],
+                'lastname' => $row['lastname'],
+                'middlename' => $row['middlename'],
+                'graveNo' => $row['graveNo'],
+                'dateofBirth' => $row['dateofBirth'],
+                'dateOfDeath' => $row['dateOfDeath'],
+                'dateofBuried' => $row['dateofBuried'],
+                'status' => $row['status'],
+                'statCol' => $row['statCol'],
+                'areaNo' => $row['areaNo'],
+                'graveType' => $row['graveType'],
+                'buriedStatus' => $row['buriedStatus'],
+                'maintenanceStatus' => $row['maintenanceStatus'],
+                'lastMaintenanceDate' => $row['lastMaintenanceDate'],
+            );
+
+            // Push the client data array into the main client_data array
+            $client_data[] = $client_row;
+        }
+    }
+
+    // Return the client data array
+    return $client_data;
+}
+
+
+
+#2
+function get_client_data_for_grave_numbers_two($gravetwoNumbers) {
+    // Prepare the query to fetch client data for given grave numbers
+    $placeholders = implode(',', array_fill(0, count($gravetwoNumbers), '?'));
+    $query = "SELECT * FROM areano2 WHERE graveNo IN ($placeholders)";
+    
+    // Execute the query with the grave numbers as parameters
+    $result = performQuery($query, $gravetwoNumbers);
+
+    // Initialize an array to store client data
+    $client_two_data = [];
+
+    // Check if there are any rows returned
+    if ($result->num_rows > 0) {
+        // Loop through the result set and fetch each row
+        while ($row = $result->fetch_assoc()) {
+            // Construct an associative array with client data for each row
+            $client_two_row = array(
+                'areaTwoId' => $row['areaTwoId'],
+                'clientNum' => $row['clientNum'],
+                'dpNum' => $row['dpNum'],
+                'firstname' => $row['firstname'],
+                'lastname' => $row['lastname'],
+                'middlename' => $row['middlename'],
+                'graveNo' => $row['graveNo'],
+                'dateofBirth' => $row['dateofBirth'],
+                'dateOfDeath' => $row['dateOfDeath'],
+                'dateofBuried' => $row['dateofBuried'],
+                'status' => $row['status'],
+                'statCol' => $row['statCol'],
+                'areaNo' => $row['areaNo'],
+                'graveType' => $row['graveType'],
+                'buriedStatus' => $row['buriedStatus'],
+                'maintenanceStatus' => $row['maintenanceStatus'],
+                'maintenanceStatusDate' => $row['maintenanceStatusDate'],
+            );
+
+            // Push the client data array into the main client_data array
+            $client_two_data[] = $client_two_row;
+        }
+    }
+
+    // Return the client data array
+    return $client_two_data;
+}
+
+#3
+function get_client_data_for_grave_numbers_three($graveNumbers) {
+    // Prepare the query to fetch client data for given grave numbers
+    $placeholders = implode(',', array_fill(0, count($graveNumbers), '?'));
+    $query = "SELECT * FROM areano3 WHERE graveNo IN ($placeholders)";
+    
+    // Execute the query with the grave numbers as parameters
+    $result = performQuery($query, $graveNumbers);
+
+    // Initialize an array to store client data
+    $client_data = [];
+
+    // Check if there are any rows returned
+    if ($result->num_rows > 0) {
+        // Loop through the result set and fetch each row
+        while ($row = $result->fetch_assoc()) {
+            // Construct an associative array with client data for each row
+            $client_row = array(
+                'areaThreeId' => $row['areaThreeId'],
+                'clientNum' => $row['clientNum'],
+                'dpNum' => $row['dpNum'],
+                'firstname' => $row['firstname'],
+                'lastname' => $row['lastname'],
+                'middlename' => $row['middlename'],
+                'graveNo' => $row['graveNo'],
+                'dateofBirth' => $row['dateofBirth'],
+                'dateOfDeath' => $row['dateOfDeath'],
+                'dateofBuried' => $row['dateofBuried'],
+                'status' => $row['status'],
+                'statCol' => $row['statCol'],
+                'areaNo' => $row['areaNo'],
+                'graveType' => $row['graveType'],
+                'buriedStatus' => $row['buriedStatus'],
+                'maintenanceStatus' => $row['maintenanceStatus'],
+                'maintenanceStatusDate' => $row['maintenanceStatusDate'],
+            );
+
+            // Push the client data array into the main client_data array
+            $client_data[] = $client_row;
+        }
+    }
+
+    // Return the client data array
+    return $client_data;
+}
+
+#4
+function get_client_data_for_grave_numbers_four($graveNumbers) {
+    // Prepare the query to fetch client data for given grave numbers
+    $placeholders = implode(',', array_fill(0, count($graveNumbers), '?'));
+    $query = "SELECT * FROM areano4 WHERE graveNo IN ($placeholders)";
+    
+    // Execute the query with the grave numbers as parameters
+    $result = performQuery($query, $graveNumbers);
+
+    // Initialize an array to store client data
+    $client_data = [];
+
+    // Check if there are any rows returned
+    if ($result->num_rows > 0) {
+        // Loop through the result set and fetch each row
+        while ($row = $result->fetch_assoc()) {
+            // Construct an associative array with client data for each row
+            $client_row = array(
+                'areaFourId' => $row['areaFourId'],
+                'clientNum' => $row['clientNum'],
+                'dpNum' => $row['dpNum'],
+                'firstname' => $row['firstname'],
+                'lastname' => $row['lastname'],
+                'middlename' => $row['middlename'],
+                'graveNo' => $row['graveNo'],
+                'dateofBirth' => $row['dateofBirth'],
+                'dateOfDeath' => $row['dateOfDeath'],
+                'dateofBuried' => $row['dateofBuried'],
+                'status' => $row['status'],
+                'statCol' => $row['statCol'],
+                'areaNo' => $row['areaNo'],
+                'graveType' => $row['graveType'],
+                'buriedStatus' => $row['buriedStatus'],
+                'maintenanceStatus' => $row['maintenanceStatus'],
+                'maintenanceStatusDate' => $row['maintenanceStatusDate'],
+            );
+
+            // Push the client data array into the main client_data array
+            $client_data[] = $client_row;
+        }
+    }
+
+    // Return the client data array
+    return $client_data;
+}
+
+#5
+function get_client_data_for_grave_numbers_five($graveNumbers) {
+    // Prepare the query to fetch client data for given grave numbers
+    $placeholders = implode(',', array_fill(0, count($graveNumbers), '?'));
+    $query = "SELECT * FROM areano5 WHERE graveNo IN ($placeholders)";
+    
+    // Execute the query with the grave numbers as parameters
+    $result = performQuery($query, $graveNumbers);
+
+    // Initialize an array to store client data
+    $client_data = [];
+
+    // Check if there are any rows returned
+    if ($result->num_rows > 0) {
+        // Loop through the result set and fetch each row
+        while ($row = $result->fetch_assoc()) {
+            // Construct an associative array with client data for each row
+            $client_row = array(
+                'areaFiveId' => $row['areaFiveId'],
+                'clientNum' => $row['clientNum'],
+                'dpNum' => $row['dpNum'],
+                'firstname' => $row['firstname'],
+                'lastname' => $row['lastname'],
+                'middlename' => $row['middlename'],
+                'graveNo' => $row['graveNo'],
+                'dateofBirth' => $row['dateofBirth'],
+                'dateOfDeath' => $row['dateOfDeath'],
+                'dateofBuried' => $row['dateofBuried'],
+                'status' => $row['status'],
+                'statCol' => $row['statCol'],
+                'areaNo' => $row['areaNo'],
+                'graveType' => $row['graveType'],
+                'buriedStatus' => $row['buriedStatus'],
+                'maintenanceStatus' => $row['maintenanceStatus'],
+                'maintenanceStatusDate' => $row['maintenanceStatusDate'],
+            );
+
+            // Push the client data array into the main client_data array
+            $client_data[] = $client_row;
+        }
+    }
+
+    // Return the client data array
+    return $client_data;
+}
+
+#6
+function get_client_data_for_grave_numbers_six($graveNumbers) {
+    // Prepare the query to fetch client data for given grave numbers
+    $placeholders = implode(',', array_fill(0, count($graveNumbers), '?'));
+    $query = "SELECT * FROM areano6 WHERE graveNo IN ($placeholders)";
+    
+    // Execute the query with the grave numbers as parameters
+    $result = performQuery($query, $graveNumbers);
+
+    // Initialize an array to store client data
+    $client_data = [];
+
+    // Check if there are any rows returned
+    if ($result->num_rows > 0) {
+        // Loop through the result set and fetch each row
+        while ($row = $result->fetch_assoc()) {
+            // Construct an associative array with client data for each row
+            $client_row = array(
+                'areaSixId' => $row['areaSixId'],
+                'clientNum' => $row['clientNum'],
+                'dpNum' => $row['dpNum'],
+                'firstname' => $row['firstname'],
+                'lastname' => $row['lastname'],
+                'middlename' => $row['middlename'],
+                'graveNo' => $row['graveNo'],
+                'dateofBirth' => $row['dateofBirth'],
+                'dateOfDeath' => $row['dateOfDeath'],
+                'dateofBuried' => $row['dateofBuried'],
+                'status' => $row['status'],
+                'statCol' => $row['statCol'],
+                'areaNo' => $row['areaNo'],
+                'graveType' => $row['graveType'],
+                'buriedStatus' => $row['buriedStatus'],
+                'maintenanceStatus' => $row['maintenanceStatus'],
+                'maintenanceStatusDate' => $row['maintenanceStatusDate'],
+            );
+
+            // Push the client data array into the main client_data array
+            $client_data[] = $client_row;
+        }
+    }
+
+    // Return the client data array
+    return $client_data;
+}
+
+#7
+function get_client_data_for_grave_numbers_seven($graveNumbers) {
+    // Prepare the query to fetch client data for given grave numbers
+    $placeholders = implode(',', array_fill(0, count($graveNumbers), '?'));
+    $query = "SELECT * FROM areano7 WHERE graveNo IN ($placeholders)";
+    
+    // Execute the query with the grave numbers as parameters
+    $result = performQuery($query, $graveNumbers);
+
+    // Initialize an array to store client data
+    $client_data = [];
+
+    // Check if there are any rows returned
+    if ($result->num_rows > 0) {
+        // Loop through the result set and fetch each row
+        while ($row = $result->fetch_assoc()) {
+            // Construct an associative array with client data for each row
+            $client_row = array(
+                'areaSevenId' => $row['areaSevenId'],
+                'clientNum' => $row['clientNum'],
+                'dpNum' => $row['dpNum'],
+                'firstname' => $row['firstname'],
+                'lastname' => $row['lastname'],
+                'middlename' => $row['middlename'],
+                'graveNo' => $row['graveNo'],
+                'dateofBirth' => $row['dateofBirth'],
+                'dateOfDeath' => $row['dateOfDeath'],
+                'dateofBuried' => $row['dateofBuried'],
+                'status' => $row['status'],
+                'statCol' => $row['statCol'],
+                'areaNo' => $row['areaNo'],
+                'graveType' => $row['graveType'],
+                'buriedStatus' => $row['buriedStatus'],
+                'maintenanceStatus' => $row['maintenanceStatus'],
+                'maintenanceStatusDate' => $row['maintenanceStatusDate'],
+            );
+
+            // Push the client data array into the main client_data array
+            $client_data[] = $client_row;
+        }
+    }
+
+    // Return the client data array
+    return $client_data;
+}
+
+#8
+function get_client_data_for_grave_numbers_eight($graveNumbers) {
+    // Prepare the query to fetch client data for given grave numbers
+    $placeholders = implode(',', array_fill(0, count($graveNumbers), '?'));
+    $query = "SELECT * FROM areano8 WHERE graveNo IN ($placeholders)";
+    
+    // Execute the query with the grave numbers as parameters
+    $result = performQuery($query, $graveNumbers);
+
+    // Initialize an array to store client data
+    $client_data = [];
+
+    // Check if there are any rows returned
+    if ($result->num_rows > 0) {
+        // Loop through the result set and fetch each row
+        while ($row = $result->fetch_assoc()) {
+            // Construct an associative array with client data for each row
+            $client_row = array(
+                'areaEightId' => $row['areaEightId'],
+                'clientNum' => $row['clientNum'],
+                'dpNum' => $row['dpNum'],
+                'firstname' => $row['firstname'],
+                'lastname' => $row['lastname'],
+                'middlename' => $row['middlename'],
+                'graveNo' => $row['graveNo'],
+                'dateofBirth' => $row['dateofBirth'],
+                'dateOfDeath' => $row['dateOfDeath'],
+                'dateofBuried' => $row['dateofBuried'],
+                'status' => $row['status'],
+                'statCol' => $row['statCol'],
+                'areaNo' => $row['areaNo'],
+                'graveType' => $row['graveType'],
+                'buriedStatus' => $row['buriedStatus'],
+                'maintenanceStatus' => $row['maintenanceStatus'],
+                'maintenanceStatusDate' => $row['maintenanceStatusDate'],
+            );
+
+            // Push the client data array into the main client_data array
+            $client_data[] = $client_row;
+        }
+    }
+
+    // Return the client data array
+    return $client_data;
+}
+
 // Function to insert data into admin_responses table
 
 // function get_client_data($client_id) {

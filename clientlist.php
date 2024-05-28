@@ -1,7 +1,7 @@
-<?php 
+<?php
 session_start();
 include 'config.php';
-include 'query.php'; // Ensure this includes the performQuery function and get_client_data function
+include 'query.php';
 
 if (isset($_SESSION['client_id'])) {
     $client_id = $_SESSION['client_id'];
@@ -18,9 +18,31 @@ if (isset($_SESSION['client_id'])) {
 }
 
 $area_data = get_data_by_area($areaOneId);
+
+function searchAllTables($conn, $search)
+{
+    $tableNames = array('areano1', 'areano2', 'areano3', 'areano4', 'areano5', 'areano6', 'areano7', 'areano8');
+    $results = array();
+
+    foreach ($tableNames as $tableName) {
+        $query = "SELECT * FROM $tableName WHERE firstname LIKE '%$search%' OR lastname LIKE '%$search%' OR middlename LIKE '%$search%' OR graveNo LIKE '%$search%' OR areaNo LIKE '%$search%'";
+        $result = $conn->query($query);
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $results[] = $row;
+            }
+        }
+    }
+
+    return $results;
+}
+
+if (isset($_POST['search'])) {
+    $search = mysqli_real_escape_string($conn, $_POST['search']);
+    $searchResults = searchAllTables($conn, $search);
+}
 ?>
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -200,21 +222,76 @@ $area_data = get_data_by_area($areaOneId);
                 </h1>
             </div>
         </div>
+        <div class="container mt-5">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Search Deceased Person Details</h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="">
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" placeholder="Search by name..." name="search" value="<?php echo $search ?? ''; ?>">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" type="submit">Search</button>
+                            </div>
+                        </div>
+                    </form>
+                        <!-- Your HTML code goes here -->
 
+                        <?php if (isset($searchResults) && !empty($searchResults)): ?>
+                        <table id="searchTable" class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Firstname</th>
+                                    <th>Middlename</th>
+                                    <th>Lastname</th>
+                                    <th>Grave No</th>
+                                    <th>Area No</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($searchResults as $dperson): ?>
+                                    <tr>
+                                        <td><?= $dperson['firstname']; ?></td>
+                                        <td><?= $dperson['middlename']; ?></td>
+                                        <td><?= $dperson['lastname']; ?></td>
+                                        <td><?= $dperson['graveNo']; ?></td>
+                                        <td><?= $dperson['areaNo']; ?></td>
+                                        <td>
+                                            <!-- Your action buttons or links go here -->
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                        <?php else: ?>
+                        <p>No records found.</p>
+                        <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        
         <div class="table-data">
+            
             <div class="todo">
                 <h1>Map per Area Given</h1>
                 <div class="container">
                     <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <!-- Button 1 -->
                             <button class="btn btn-primary btn-block mb-3"><a href="Area1.php">Area 1</a></button>
                             <!-- Area 2 -->
-                            <button class="btn btn-primary btn-block mb-3">Area 2</button>
+                            <button class="btn btn-primary btn-block mb-3"><a href="Area2.php">Area 2</a></button>
                             <!-- Area 3 -->
                             <button class="btn btn-primary btn-block mb-3">Area 3</button>
                             <!-- Area 4 -->
                             <button class="btn btn-primary btn-block mb-3">Area 4</button>
+                        </div>
+                        <div class="col-md-6">
                             <!-- Area 5 -->
                             <button class="btn btn-primary btn-block mb-3">Area 5</button>
                             <!-- Area 6 -->
@@ -230,12 +307,39 @@ $area_data = get_data_by_area($areaOneId);
         </div>
         
         
+        
     
         <div id="clientData"></div>
     </main>
     <!-- MAIN -->
 </section>
 <!-- CONTENT -->
+<script>
+    $(document).ready(function() {
+        $('.viewSelection').on('click', function() {
+            $('#darea').text($(this).data('darea'));
+            $('#graveno').text($(this).data('graveno'));
+            $('#name').text($(this).data('name'));
+            $('#birth').text($(this).data('birth'));
+            $('#death').text($(this).data('death'));
+            $('#img-links').attr('src', $(this).data('dareaimg'));
+            var modal = new bootstrap.Modal(document.getElementById('displayPerson'));
+            modal.show();
+        });
+    });
+
+    var closeModalBtn = document.getElementById("closeModalBtns");
+    
+    // Add a click event listener to the button
+    closeModalBtns.addEventListener("click", function() {
+        // Perform the redirection to index2-view.php
+        window.location.href = "Aboutus3.php";
+    });
+
+    $(document).ready(function() {
+        $('#searchTable').DataTable();
+    });
+</script>
 <script src="script2.js"></script>
 </body>
 </html>
