@@ -3,51 +3,56 @@ session_start();
 include 'config.php'; // Include the config file to define $conn
 include 'query.php'; // Include the query file
 
-// Define the grave numbers you want to fetch data for
-$graveNumbers = range(1, 30); // Array of numbers from 1 to 30
+// Define the grave numbers you want to fetch datatwo for
+$gravetwoNumbers = range(1, 30); // Array of numbers from 1 to 30
 
-// Fetch the client data for the specified grave numbers
-$client_data = get_client_data_for_grave_numbers($graveNumbers);
+// Fetch the client datatwo for the specified grave numbers
+$client_two_data = get_client_data_for_grave_numbers_two($gravetwoNumbers);
 
 // Define positions for each grave number
 $positions = [
-    1 => ['top' => 69, 'left' => 20],
-    2 => ['top' => 66, 'left'  => 27],
-    3 => ['top' => 63, 'left' => 34],
-    4 => ['top' => 60, 'left' => 41],
-    5 => ['top' => 59, 'left' => 48],
-    6 => ['top' => 58, 'left' => 55],
-    7 => ['top' => 57, 'left' => 62],
-    8 => ['top' => 57, 'left' => 67],
-    9 => ['top' => 56, 'left' => 74],
-    10 => ['top' => 56, 'left' => 81],
-    11 => ['top' => 61, 'left' => 20],
-    12 => ['top' => 57, 'left' => 27],
-    13 => ['top' => 53, 'left' => 34],
-    14 => ['top' => 50, 'left' => 41],
-    15 => ['top' => 48, 'left' => 48],
-    16 => ['top' => 48, 'left' => 55],
-    17 => ['top' => 48, 'left' => 62],
-    18 => ['top' => 48, 'left' => 67],
+    1 => ['top' => 57, 'left' => 15],
+    2 => ['top' => 52, 'left'  => 20],
+    3 => ['top' => 48, 'left' => 25],
+    4 => ['top' => 44, 'left' => 30],
+    5 => ['top' => 40, 'left' => 35],
+
+    6 => ['top' => 56, 'left' => 25],
+    7 => ['top' => 51, 'left' => 30],
+    8 => ['top' => 46, 'left' => 35],
+    9 => ['top' => 41, 'left' => 40],
+    10 => ['top' => 36, 'left' => 45],
+
+    11 => ['top' => 55, 'left' => 35],
+    12 => ['top' => 50, 'left' => 40],
+    13 => ['top' => 45, 'left' => 45],
+    14 => ['top' => 40, 'left' => 50],
+    15 => ['top' => 35, 'left' => 55],
+
+    16 => ['top' => 40, 'left' => 73],
+    17 => ['top' => 43, 'left' => 76],
+    18 => ['top' => 46, 'left' => 69],
     19 => ['top' => 48, 'left' => 74],
-    20 => ['top' => 46, 'left' => 81],
-    21 => ['top' => 49, 'left' => 20],
-    22 => ['top' => 47, 'left' => 27],
-    23 => ['top' => 44, 'left' => 34],
-    24 => ['top' => 41, 'left' => 41],
-    25 => ['top' => 40, 'left' => 48],
-    26 => ['top' => 39, 'left' => 55],
-    27 => ['top' => 38, 'left' => 62],
-    28 => ['top' => 38, 'left' => 67],
-    29 => ['top' => 37, 'left' => 74],
-    30 => ['top' => 37, 'left' => 81],
+    20 => ['top' => 50, 'left' => 81],
+    21 => ['top' => 44, 'left' => 82],
+
+    22 => ['top' => 55, 'left' => 59],
+    23 => ['top' => 57, 'left' => 65],
+    24 => ['top' => 59, 'left' => 74],
+    25 => ['top' => 61, 'left' => 53],
+    26 => ['top' => 66, 'left' => 58],
+    27 => ['top' => 66, 'left' => 67],
+
+    28 => ['top' => 70, 'left' => 47],
+    29 => ['top' => 73, 'left' => 54],
+    30 => ['top' => 72, 'left' => 61],
 ];
 
-// Map positions to client data
-foreach ($client_data as &$data) {
-    if (isset($positions[$data['graveNo']])) {
-        $data['top'] = $positions[$data['graveNo']]['top'];
-        $data['left'] = $positions[$data['graveNo']]['left'];
+// Map positions to client datatwo
+foreach ($client_two_data as &$datatwo) {
+    if (isset($positions[$datatwo['graveNo']])) {
+        $datatwo['top'] = $positions[$datatwo['graveNo']]['top'];
+        $datatwo['left'] = $positions[$datatwo['graveNo']]['left'];
     }
 }
 ?>
@@ -86,6 +91,17 @@ foreach ($client_data as &$data) {
             cursor: pointer;
             border-radius: 40%;
         }
+        .blue-button {
+  background-color: blue;
+  color: white;
+  /* Add more styles as needed */
+}
+
+.green-button {
+  background-color: green;
+  color: white;
+  /* Add more styles as needed */
+}
         .modal {
             display: none;
             position: fixed;
@@ -156,23 +172,26 @@ foreach ($client_data as &$data) {
         <div class="image-container">
             <h1>Himalyang Pilipino Memorial Park Map</h1>
             <img src="uploaded_img/FinalArea.png" alt="Snow" style="max-width: 100%; max-height: 100%;">
-            <button class="btn btn1" id="modalBtn1">A2</button>
+            <button class="btn btn1" id="modalBtn2">A2</button>
             <!-- Add circular buttons for main image content -->
         </div>
     </div>
 
     <!-- Main Modal for Button A1 -->
-    <div id="myModal1" class="modal">
+    <div id="myModal2" class="modal">
         <div class="modal-content">
-            <span class="close" onclick="closeModal('myModal1')">&times;</span>
+            <span class="close" onclick="closeModal('myModal2')">&times;</span>
             <h2>Area 2 Details</h2>
-            <img src="uploaded_img/AreaTwo.png" alt="Area 1" style="max-width: 1000vh; max-height: 1000vh;">
+            <img src="uploaded_img/AreaTwo.png" alt="Area 2" style="max-width: 1000vh; max-height: 1000vh;">
             <!-- Add circular buttons for Area 1 modal content -->
             <?php for ($i = 1; $i <= 30; $i++): ?>
-                <?php $top = isset($positions[$i]['top']) ? $positions[$i]['top'] : ''; ?>
-                <?php $left = isset($positions[$i]['left']) ? $positions[$i]['left'] : ''; ?>
+                <?php 
+                 $datatwo = isset($client_two_data[$i - 1]) ? $client_two_data[$i - 1] : null;
+                $top = isset($positions[$i]['top']) ? $positions[$i]['top'] : ''; 
+                 $left = isset($positions[$i]['left']) ? $positions[$i]['left'] : ''; 
+                 ?>
                 <div style="position: absolute; top: <?php echo $top; ?>%; left: <?php echo $left; ?>%; width: 0; height: 0;">
-                    <button class="modal-button" onclick="openModal('graveModal<?php echo $i; ?>')"><?php echo $i; ?></button>
+                    <button class="modal-button <?php echo ($datatwo) ? 'blue-button' : 'green-button'; ?>" onclick="openModal('graveModal<?php echo $i; ?>')"><?php echo $i; ?></button>
                 </div>
             <?php endfor; ?>
         </div>
@@ -180,28 +199,28 @@ foreach ($client_data as &$data) {
 
     <!-- Modals for each grave number -->
     <?php for ($i = 1; $i <= 30; $i++): ?>
-        <?php $data = isset($client_data[$i - 1]) ? $client_data[$i - 1] : null; ?>
+        <?php $datatwo = isset($client_two_data[$i - 1]) ? $client_two_data[$i - 1] : null; ?>
         <div id="graveModal<?php echo $i; ?>" class="modal">
             <div class="modal-content">
                 <span class="close" onclick="closeModal('graveModal<?php echo $i; ?>')">&times;</span>
                 <h2>Details for Grave No <?php echo $i; ?></h2>
-                <?php if ($data): ?>
-                    <p>First Name: <?php echo $data['firstname']; ?></p>
-                    <p>Last Name: <?php echo $data['lastname']; ?></p>
-                    <p>Middle Name: <?php echo $data['middlename']; ?></p>
-                    <p>Date of Birth: <?php echo $data['dateofBirth']; ?></p>
-                    <p>Date of Death: <?php echo $data['dateOfDeath']; ?></p>
-                    <p>Date of Buried: <?php echo $data['dateofBuried']; ?></p>
-                    <p>Status: <?php echo $data['status']; ?></p>
-                    <p>Stat Col: <?php echo $data['statCol']; ?></p>
-                    <p>Area No: <?php echo $data['areaNo']; ?></p>
-                    <p>Grave Type: <?php echo $data['graveType']; ?></p>
-                    <p>Buried Status: <?php echo $data['buriedStatus']; ?></p>
-                    <p>Maintenance Status: <?php echo $data['maintenanceStatus']; ?></p>
-                    <p>Last Maintenance Date: <?php echo $data['lastMaintenanceDate']; ?></p>
+                <?php if ($datatwo): ?>
+                    <p>First Name: <?php echo $datatwo['firstname']; ?></p>
+                    <p>Last Name: <?php echo $datatwo['lastname']; ?></p>
+                    <p>Middle Name: <?php echo $datatwo['middlename']; ?></p>
+                    <p>Date of Birth: <?php echo $datatwo['dateofBirth']; ?></p>
+                    <p>Date of Death: <?php echo $datatwo['dateOfDeath']; ?></p>
+                    <p>Date of Buried: <?php echo $datatwo['dateofBuried']; ?></p>
+                    <p>Status: <?php echo $datatwo['status']; ?></p>
+                    <p>Stat Col: <?php echo $datatwo['statCol']; ?></p>
+                    <p>Area No: <?php echo $datatwo['areaNo']; ?></p>
+                    <p>Grave Type: <?php echo $datatwo['graveType']; ?></p>
+                    <p>Buried Status: <?php echo $datatwo['buriedStatus']; ?></p>
+                    <p>Maintenance Status: <?php echo $datatwo['maintenanceStatus']; ?></p>
+                    <p>Last Maintenance Date: <?php echo $datatwo['maintenanceStatusDate']; ?></p>
                     
                     <?php
-                        $buriedDate = new DateTime($data['dateofBuried']);
+                        $buriedDate = new DateTime($datatwo['dateofBuried']);
                         $currentDate = new DateTime();
                         $interval = $currentDate->diff($buriedDate);
                         $years = $interval->y;
@@ -227,8 +246,9 @@ foreach ($client_data as &$data) {
                         <p><?php echo $alertMessage; ?> since buried: <?php echo $years; ?> years, <?php echo $months; ?> months, <?php echo $days; ?> days.</p>
                     </div>
                 <?php else: ?>
-                    <p>No data available for this grave.</p>
+                    <p>No datatwo available for this grave.</p>
                 <?php endif; ?>
+                <button id="graveButton<?php echo $i; ?>" class="<?php echo ($datatwo) ? 'blue-button' : 'green-button'; ?>" onclick="showModal('graveModal<?php echo $i; ?>')">Show Details</button>
             </div>
         </div>
     <?php endfor; ?>
@@ -245,8 +265,8 @@ foreach ($client_data as &$data) {
         }
 
         // Add event listener for the A1 button
-        document.getElementById('modalBtn1').onclick = function() {
-            openModal('myModal1');
+        document.getElementById('modalBtn2').onclick = function() {
+            openModal('myModal2');
         }
 
         // Close the modal when the user clicks outside of it

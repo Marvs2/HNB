@@ -2,10 +2,28 @@
 session_start();
 include 'config.php'; // Include the config file to define $conn
 include 'query.php';
+function searchAllTables($conn, $search)
+{
+    $tableNames = array('areano1', 'areano2', 'areano3', 'areano4', 'areano5', 'areano6', 'areano7', 'areano8');
+    $results = array();
 
-$search = "";
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $search = trim($_POST['search']);
+    foreach ($tableNames as $tableName) {
+        $query = "SELECT * FROM $tableName WHERE firstname LIKE '%$search%' OR lastname LIKE '%$search%' OR middlename LIKE '%$search%' OR graveNo LIKE '%$search%' OR areaNo LIKE '%$search%'";
+        $result = $conn->query($query);
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $results[] = $row;
+            }
+        }
+    }
+
+    return $results;
+}
+
+if (isset($_POST['search'])) {
+    $search = mysqli_real_escape_string($conn, $_POST['search']);
+    $searchResults = searchAllTables($conn, $search);
 }
 ?>
 
@@ -73,48 +91,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             </div>
                         </div>
                     </form>
-                    <table id="searchTable" class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Firstname</th>
-                                <th>Lastname</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        <?php
-                        if (!empty($search)) {
-                            $conn = mysqli_connect("localhost", "root", "", "user_db");
-                            $search = mysqli_real_escape_string($conn, $search);
-                            $query = "SELECT * FROM areano1 WHERE firstname LIKE '%$search%' OR lastname LIKE '%$search%' OR middlename LIKE '%$search%'";
-                            $query_run = mysqli_query($conn, $query);
-
-                            if (mysqli_num_rows($query_run) > 0) {
-                                foreach ($query_run as $index => $dperson) {
-                                    ?>
-                                    <tr>
-                                        <td><?= $dperson['firstname']; ?></td>
-                                        <td><?= $dperson['lastname']; ?></td>
-                                        <td>
-                                            <a class="btn btn-primary btn-sm viewSelection"
-                                               data-toggle="modal"
-                                               data-target="#displayPerson"
-                                               data-darea="Area: <?php echo ceil($dperson['graveNo'] / 60) ?>"
-                                               data-graveno="Graveyard: <?php echo $dperson['graveNo'] ?>"
-                                               data-name="<?php echo $dperson['firstname'] . ' ' . $dperson['lastname'] . ' ' . $dperson['middlename'] ?>"
-                                               data-death="<?php echo $dperson['dateOfDeath'] ?>"
-                                               data-birth="<?php echo $dperson['dateofBirth'] ?>"
-                                               data-dareaimg="images/area<?php echo $index + 1 ?>.webp" href="#">View</a>
-                                        </td>
-                                    </tr>
-                                    <?php
-                                }
-                            } else {
-                                echo "<tr><td colspan='3'><h5>No Record Found</h5></td></tr>";
-                            }
-                            mysqli_close($conn);
-                        }
-                        ?>
+<?php if (isset($searchResults) && !empty($searchResults)): ?>
+<table id="searchTable" class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Firstname</th>
+            <th>Middlename</th>
+            <th>Lastname</th>
+            <th>Grave No</th>
+            <th>Area No</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($searchResults as $dperson): ?>
+            <tr>
+                <td><?= $dperson['firstname']; ?></td>
+                <td><?= $dperson['middlename']; ?></td>
+                <td><?= $dperson['lastname']; ?></td>
+                <td><?= $dperson['graveNo']; ?></td>
+                <td><?= $dperson['areaNo']; ?></td>
+                <td>
+                    <!-- Your action buttons or links go here -->
+                </td>
+            </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
+<?php else: ?>
+<p>No records found.</p>
+<?php endif; ?>
                         </tbody>
                     </table>
                 </div>
@@ -122,31 +128,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
     </main>
     <!-- MAIN -->
-
-    <!-- Modal -->
-    <div class="modal fade" id="displayPerson" tabindex="-1" role="dialog" aria-labelledby="displayPersonLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="displayPersonLabel">Deceased Person Details</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p id="darea"></p>
-                    <p id="graveno"></p>
-                    <p>Deceased Name: <span id="name"></span></p>
-                    <p>Date of Birth: <span id="birth"></span></p>
-                    <p>Date of Death: <span id="death"></span></p>
-                    <img src="#" alt="area image" id="img-links" class="img-fluid">
-                </div>
-                <div class="modal-footer">
-                    <button id="closeModalBtns" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
 </section>
 
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>

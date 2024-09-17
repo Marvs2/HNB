@@ -113,59 +113,58 @@ if (empty($fnameErr) && empty($lnameErr) && empty($mnameErr) && empty($dofBirthE
 <body>
 
 
-	<!-- SIDEBAR -->
-	<section id="sidebar">
-		<a href="index2.php" class="brand">
-			<span class="text" style="padding-left: 15px;"> Himlayan ng Bayan</span>
-		</a>
-		<ul class="side-menu top">
-			<li>
-				<a href="index2.php">
-					<i class='bx bxs-dashboard' ></i>
-					<span class="text">Dashboard</span>
-				</a>
-			</li>
-			<li>
-				<a href="location.php">
-					<i class='bx bxs-edit-location' ></i>
-					<span class="text">Location</span>
-				</a>
-			</li>
-			<li class="active">
-				<a href="add.php">
-					<i class='bx bx-folder-plus'></i>
-					<span class="text">ADD Deceased Person</span>
-				</a>
-			</li>
-			<li>
-				<a href="index2-view.php">
-					<i class='bx bx-street-view'></i>
-					<span class="text">View</span>
-				</a>
-			</li>
-			<li>
-				<a href="list.php">
-					<i class='bx bx-list-ul'></i>
-					<span class="text">List</span>
-				</a>
-			</li>
-            <li>
-                <a href="messages.php">
-                    <i class='bx bx-list-ul'></i>
-                    <span class="text">Messages</span>
-                </a>
-            </li>
-		</ul>
-		<ul class="side-menu">
-			<li>
-				<a href="logout.php" class="logout">
-					<i class='bx bxs-log-out-circle' ></i>
-					<span class="text">Logout</span>
-				</a>
-			</li>
-		</ul>
-	</section>
-	<!-- SIDEBAR -->
+   <!-- SIDEBAR -->
+   <section id="sidebar">
+    <a href="index2.php" class="brand">
+        <span class="text" style="padding-left: 15px;"> Himlayan ng Bayan</span>
+    </a>
+    <ul class="side-menu top">
+        <li>
+            <a href="index2.php">
+                <i class='bx bxs-dashboard' ></i>
+                <span class="text">Dashboard</span>
+            </a>
+        </li>
+        <li>
+            <a href="location.php">
+                <i class='bx bxs-edit-location' ></i>
+                <span class="text">Location</span>
+            </a>
+        </li>
+        <li class="active">
+            <a href="add.php">
+                <i class='bx bx-folder-plus'></i>
+                <span class="text">ADD Deceased Person</span>
+            </a>
+        <li>
+            <a href="index2-view.php">
+                <i class='bx bx-street-view'></i>
+                <span class="text">View</span>
+            </a>
+        </li>
+        <li>
+            <a href="list.php">
+                <i class='bx bx-list-ul'></i>
+                <span class="text">List</span>
+            </a>
+        </li>
+        <li>
+            <a href="messages.php">
+                <i class='bx bx-list-ul'></i>
+                <span class="text">Messages</span>
+            </a>
+        </li>
+    </ul>
+    <ul class="side-menu">
+        <li>
+            <a href="logout.php" class="logout">
+                <i class='bx bxs-log-out-circle' ></i>
+                <span class="text">Logout</span>
+            </a>
+        </li>
+    </ul>
+</section>
+
 
 
 

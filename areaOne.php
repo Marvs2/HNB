@@ -149,52 +149,87 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <title>Deceased Person Create</title>
 </head>
 <body>
-    <section id="sidebar">
-        <a href="index2.php" class="brand">
-            <i class=''><b> HNB </b></i>
-            <span class="text" style="padding-left: 15px;"> Himlayan ng Bayan</span>
-        </a>
-        <ul class="side-menu top">
-            <li>
-                <a href="index2.php">
-                    <i class='bx bxs-dashboard'></i>
-                    <span class="text">Dashboard</span>
-                </a>
-            </li>
-            <li>
-                <a href="location.php">
-                    <i class='bx bxs-edit-location'></i>
-                    <span class="text">Location</span>
-                </a>
-            </li>
-            <li class="active">
+   <!-- SIDEBAR -->
+	<section id="sidebar">
+		<a href="index2.php" class="brand">
+			<span class="text" style="padding-left: 15px;"> Himlayan ng Bayan</span>
+		</a>
+		<ul class="side-menu top">
+			<li>
+				<a href="index2.php">
+					<i class='bx bxs-dashboard' ></i>
+					<span class="text">Dashboard</span>
+				</a>
+			</li>
+			<li>
+				<a href="location.php">
+					<i class='bx bxs-edit-location' ></i>
+					<span class="text">Location</span>
+				</a>
+			</li>
+			<li>
                 <a href="add.php">
                     <i class='bx bx-folder-plus'></i>
                     <span class="text">ADD Deceased Person</span>
                 </a>
+                <!-- Nested list -->
+                <ul>
+                    <li>
+                        <a href="areaOne.php">Add in Area 1</a>
+                    </li>
+                    <li>
+                        <a href="areaTwo.php">Add in Area 2</a>
+                    </li>
+                    <li>
+                        <a href="areaThree.php">Add in Area 3</a>
+                    </li>
+                    <li>
+                        <a href="areaFour.php">Add in Area 4</a>
+                    </li>
+                    <li>
+                        <a href="areaFive.php">Add in Area 5</a>
+                    </li>
+                    <li>
+                        <a href="areaSix.php">Add in Area 6</a>
+                    </li>
+                    <li>
+                        <a href="areaSeven.php">Add in Area 7</a>
+                    </li>
+                    <li>
+                        <a href="areaEight.php">Add in Area 8</a>
+                    </li>
+                    <!-- Add more nested list items as needed -->
+                </ul>
             </li>
+            
+			<li>
+				<a href="index2-view.php">
+					<i class='bx bx-street-view'></i>
+					<span class="text">View</span>
+				</a>
+			</li>
+			<li>
+				<a href="list.php">
+					<i class='bx bx-list-ul'></i>
+					<span class="text">List</span>
+				</a>
+			</li>
             <li>
-                <a href="index2-view.php">
-                    <i class='bx bx-street-view'></i>
-                    <span class="text">View</span>
-                </a>
-            </li>
-            <li>
-                <a href="list.php">
+                <a href="messages.php">
                     <i class='bx bx-list-ul'></i>
-                    <span class="text">Request</span>
+                    <span class="text">Messages</span>
                 </a>
             </li>
-        </ul>
-        <ul class="side-menu">
-            <li>
-                <a href="logout.php" class="logout">
-                    <i class='bx bxs-log-out-circle'></i>
-                    <span class="text">Logout</span>
-                </a>
-            </li>
-        </ul>
-    </section>
+		</ul>
+		<ul class="side-menu">
+			<li>
+				<a href="logout.php" class="logout">
+					<i class='bx bxs-log-out-circle' ></i>
+					<span class="text">Logout</span>
+				</a>
+			</li>
+		</ul>
+	</section>
 
     <section id="content">
         <nav>

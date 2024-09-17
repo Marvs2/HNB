@@ -1,12 +1,7 @@
 <?php 
 session_start();
 include 'config.php';
-include 'query.php'; // Ensure this includes the performQuery function and get_client_data function
-
-
-$client_data = null;
-$areano1_data = [];
-$areano1_data_length = 0;
+include 'query.php'; // Ensure this includes the performQuery function and get_user_data function
 
 if (isset($_SESSION['client_id'])) {
     $client_id = $_SESSION['client_id'];
@@ -31,9 +26,63 @@ if (isset($_SESSION['client_id'])) {
     exit();
 }
 
-$area_data = get_data_by_area($areaOneId);
-?>
+function countRowsWithAndWithoutData($conn, $tableName) {
+    $queryWithData = "SELECT COUNT(*) as rowsWithData FROM $tableName WHERE dpNum IS NOT NULL";
+    $resultWithData = $conn->query($queryWithData);
+    $rowWithData = $resultWithData->fetch_assoc()['rowsWithData'];
 
+    // Count the total number of rows
+    $queryTotalRows = "SELECT COUNT(*) as totalRows FROM $tableName";
+    $resultTotalRows = $conn->query($queryTotalRows);
+    $totalRows = $resultTotalRows->fetch_assoc()['totalRows'];
+
+    // Calculate rows without data as totalRows - 30
+    $rowWithoutData = 30 - $totalRows ;
+
+    return array(
+        'rowsWithData' => $rowWithData,
+        'rowsWithoutData' => $rowWithoutData,
+        'totalRows' => $totalRows
+    );
+}
+
+$conn = mysqli_connect("localhost", "root", "", "user_db");
+
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+#inactive account
+$query = "SELECT COUNT(*) as inactiveCount FROM client_form WHERE status = 'Inactive'";
+$result = mysqli_query($conn, $query);
+$row = mysqli_fetch_assoc($result);
+$requests_count = $row['inactiveCount'];
+
+
+$tableNames = array('areano1', 'areano2', 'areano3', 'areano4', 'areano5', 'areano6', 'areano7', 'areano8');
+$tableData = array();
+
+$totalRowsWithData = 0;
+$totalRowsWithoutData = 0;
+
+foreach ($tableNames as $tableName) {
+    $rowCount = countRowsWithAndWithoutData($conn, $tableName);
+
+    // Calculate the percentage occupancy
+    $percentageOccupancy = ($rowCount['rowsWithData'] / 30) * 100;
+
+    $tableData[] = array(
+        'tableName' => $tableName,
+        'rowCount' => $rowCount,
+        'percentageOccupancy' => $percentageOccupancy
+    );
+
+    $totalRowsWithData += $rowCount['rowsWithData'];
+    $totalRowsWithoutData += $rowCount['rowsWithoutData'];
+}
+
+$conn->close();
+?> 
 
 <!DOCTYPE html>
 <html lang="en">
@@ -41,25 +90,24 @@ $area_data = get_data_by_area($areaOneId);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Bootstrap and Boxicons -->
+    <!-- Boxicons -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="css/index2/css/style2.css">
+    <!-- My CSS -->
     <link rel="stylesheet" href="css/index2/css/style.css">
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
     <title>Deceased Person - Dashboard</title>
-    <style>
-        /* Additional CSS for layout and styling */
-    </style>
 </head>
 <body>
 
 <!-- SIDEBAR -->
 <section id="sidebar">
-    <a href="index2.php" class="brand">
+    <a href="clientindex.php" class="brand">
         <span class="text" style="padding-left: 15px;"> Himlayan ng Bayan</span>
     </a>
     <ul class="side-menu top">
-        <li class="active">
+        <li>
             <a href="clientindex.php"><!--near half 25%--> 
                 <i class='bx bxs-dashboard'></i>
                 <span class="text">Dashboard</span>
@@ -99,158 +147,100 @@ $area_data = get_data_by_area($areaOneId);
         </li>
     </ul>
 </section>
+
 <!-- SIDEBAR -->
 
 <!-- CONTENT -->
 <section id="content">
+    <!-- NAVBAR -->
+    <nav>
+        <i class='bx bx-menu'></i>
+        <a href="#" class="profile" style="float:right;">
+            <?php
+            // Check if the user is logged in
+            if (isset($firstname)) {
+                // Display user information if logged in
+                echo 'Welcome ' . $firstname . ' Admin';
+                // You can echo other user data fields as needed
+            } else {
+                // Redirect to the login form if the user is not logged in
+                header("Location: login_form.php");
+                exit();
+            }
+        ?>
+        </a>
+    </nav>
+    <!-- NAVBAR -->
+
+    <!-- MAIN -->
     <main>
         <div class="head-title">
             <div class="left">
-                <h1>Welcome <?php echo htmlspecialchars($firstname); ?></h1>
+                <h1>Dashboard</h1>
+                <ul class="breadcrumb">
+                    <li>
+                        <a href="#">Dashboard</a>
+                    </li>
+                    <li><i class='bx bx-chevron-right'></i></li>
+                    <li>
+                        <a class="active" href="#">Home</a>
+                    </li>
+                </ul>
             </div>
         </div>
 
         <ul class="box-info">
             <li>
-                <i class='bx bxs-calendar-check'></i>
+                <i class='bx bxs-group'></i>
                 <span class="text">
-                    <p>Deceased Counts: <?php echo htmlspecialchars($clientNum); ?>: <?php echo $areano1_data_length; ?></p>
+                    <?php echo $totalRowsWithData; ?>
+                    <p>Total: <?php echo $totalRowsWithData; ?></p>
                 </span>
             </li>
             <li>
                 <i class='bx bxs-group'></i>
                 <span class="text">
-                    <p>Requests: <?php echo $requests_count; ?></p>
+                    <?php echo $totalRowsWithoutData; ?>
+                    <p>Avalable:<?php echo $totalRowsWithoutData; ?></p>
                 </span>
             </li>
             <li>
-                <i class='bx bxs-calendar-check'></i>
+                <i class='bx bxs-group'></i>
                 <span class="text">
-                    <p>Deceased Counts: <?php echo $dpersons_count; ?></p>
+                    <?php echo $requests_count; ?>
+                    <p>Requests: <?php echo $requests_count; ?></p>
                 </span>
             </li>
         </ul>
 
         <div class="table-data">
-            <div>
-                <h2>Dp List Data</h2>
-
-                <?php if ($areano1_data_length > 0) : ?>
+            <div class="order">
+                <div id="chartsContainer" style="height: 450px; width: 100%;"></div>
+                <br>
+                <h4>Occupancy Percentage</h4>
                 <table>
                     <thead>
                         <tr>
-                            <th>Client Num</th>
-                            <th>DP Num</th>
-                            <th>First Name</th>
-                            <th>Action</th>
+                            <th>Area</th>
+                            <th>Total Rows</th>
+                            <th>Rows With Data</th>
+                            <th>Rows Without Data</th>
+                            <th>Percentage Occupancy</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($areano1_data as $row) : 
-                            $buriedDate = new DateTime($row['dateofBuried']);
-                            $currentDate = new DateTime();
-                            $interval = $currentDate->diff($buriedDate);
-                            $years = $interval->y;
-                            $months = $interval->m;
-                            $days = $interval->d;
-                            
-                            if ($years >= 5) {
-                                $alertClass = 'alert-danger';
-                                $alertMessage = 'More than 5 years';
-                            } elseif ($years >= 1) {
-                                $alertClass = 'alert-warning';
-                                $alertMessage = 'More than 1 year';
-                            } elseif ($months >= 1) {
-                                $alertClass = 'alert-info';
-                                $alertMessage = 'More than 1 month';
-                            } else {
-                                $alertClass = 'alert-success';
-                                $alertMessage = 'Less than a month';
-                            }
-                        ?>
+                        <?php foreach ($tableData as $data): ?>
                             <tr>
-                                <td><?php echo htmlspecialchars($row['clientNum']); ?></td>
-                                <td><?php echo htmlspecialchars($row['dpNum']); ?></td>
-                                <td><?php echo htmlspecialchars($row['firstname']); ?></td>
-                                <td>
-                                    <button class="viewDetails" 
-                                        data-toggle="modal" 
-                                        data-target="#graveDetailsModal"
-                                        data-clientnum="<?php echo htmlspecialchars($row['clientNum']); ?>"
-                                        data-dpnum="<?php echo htmlspecialchars($row['dpNum']); ?>"
-                                        data-firstname="<?php echo htmlspecialchars($row['firstname']); ?>"
-                                        data-lastname="<?php echo htmlspecialchars($row['lastname']); ?>"
-                                        data-graveno="<?php echo htmlspecialchars($row['graveNo']); ?>"
-                                        data-dateofbirth="<?php echo htmlspecialchars($row['dateofBirth']); ?>"
-                                        data-dateofdeath="<?php echo htmlspecialchars($row['dateOfDeath']); ?>"
-                                        data-dateofburied="<?php echo htmlspecialchars($row['dateofBuried']); ?>"
-                                        data-status="<?php echo htmlspecialchars($row['status']); ?>"
-                                        data-statcol="<?php echo htmlspecialchars($row['statCol']); ?>"
-                                        data-areano="<?php echo htmlspecialchars($row['areaNo']); ?>"
-                                        data-gravetype="<?php echo htmlspecialchars($row['graveType']); ?>"
-                                        data-buriedstatus="<?php echo htmlspecialchars($row['buriedStatus']); ?>"
-                                        data-maintenancestatus="<?php echo htmlspecialchars($row['maintenanceStatus']); ?>"
-                                        data-lastmaintenancedate="<?php echo htmlspecialchars($row['lastMaintenanceDate']); ?>"
-                                        data-alertclass="<?php echo $alertClass; ?>"
-                                        data-alertmessage="<?php echo $alertMessage; ?>"
-                                        data-yearssinceburial="<?php echo $years; ?>"
-                                        data-monthssinceburial="<?php echo $months; ?>"
-                                        data-dayssinceburial="<?php echo $days; ?>"
-                                    >View</button>
-                                </td>
+                                <td><?php echo $data['tableName']; ?></td>
+                                <td><?php echo $data['rowCount']['totalRows']; ?></td>
+                                <td><?php echo $data['rowCount']['rowsWithData']; ?></td>
+                                <td><?php echo $data['rowCount']['rowsWithoutData']; ?></td>
+                                <td><?php echo number_format($data['percentageOccupancy'], 2); ?>%</td>
                             </tr>
-                        <?php endforeach; ?>                        
+                        <?php endforeach; ?>
                     </tbody>
                 </table>
-            <?php else : ?>
-                <p>No records found for clientNum <?php echo htmlspecialchars($clientNum); ?></p>
-            <?php endif; ?>
             </div>
-            
-            <!-- Modal HTML Structure -->
-            <div class="modal fade" id="graveDetailsModal" tabindex="-1" role="dialog" aria-labelledby="graveDetailsModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="graveDetailsModalLabel">Grave Details</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <p><strong>First Name:</strong> <span id="modalFirstName"></span></p>
-                                    <p><strong>Last Name:</strong> <span id="modalLastName"></span></p>
-                                    <p><strong>Client Number:</strong> <span id="modalClientNum"></span></p>
-                                    <p><strong>DP Number:</strong> <span id="modalDpNum"></span></p>
-                                    <p><strong>Grave Number:</strong> <span id="modalGraveNo"></span></p>
-                                    <p><strong>Date of Birth:</strong> <span id="modalDateofBirth"></span></p>
-                                    <p><strong>Date of Death:</strong> <span id="modalDateOfDeath"></span></p>
-                                </div>
-                                <div class="col-md-6">
-                                    <p><strong>Date of Buried:</strong> <span id="modalDateofBuried"></span></p>
-                                    <p><strong>Status:</strong> <span id="modalStatus"></span></p>
-                                    <p><strong>Status Column:</strong> <span id="modalStatCol"></span></p>
-                                    <p><strong>Area Number:</strong> <span id="modalAreaNo"></span></p>
-                                    <p><strong>Grave Type:</strong> <span id="modalGraveType"></span></p>
-                                    <p><strong>Buried Status:</strong> <span id="modalBuriedStatus"></span></p>
-                                    <p><strong>Maintenance Status:</strong> <span id="modalMaintenanceStatus"></span></p>
-                                    <p><strong>Last Maintenance Date:</strong> <span id="modalLastMaintenanceDate"></span></p>
-                                </div>
-                            </div>
-                            <div class="alert" id="modalAlert" role="alert">
-                                <span id="modalAlertMessage"></span>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            
             <div class="todo">
                 <div class="container">
                     <canvas id="myChart" width="350" height="500" aria-label="chart" role="img"></canvas>
@@ -265,58 +255,30 @@ $area_data = get_data_by_area($areaOneId);
 <!-- Ensure jQuery and Bootstrap JavaScript are included -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
 <script>
-   $(document).ready(function() {
-    $('.viewDetails').on('click', function() {
-        var clientNum = $(this).data('clientnum');
-        var dpNum = $(this).data('dpnum');
-        var firstName = $(this).data('firstname');
-        var lastName = $(this).data('lastname');
-        var graveNo = $(this).data('graveno');
-        var dateofBirth = $(this).data('dateofbirth');
-        var dateOfDeath = $(this).data('dateofdeath');
-        var dateofBuried = $(this).data('dateofburied');
-        var status = $(this).data('status');
-        var statCol = $(this).data('statcol');
-        var areaNo = $(this).data('areano');
-        var graveType = $(this).data('gravetype');
-        var buriedStatus = $(this).data('buriedstatus');
-        var maintenanceStatus = $(this).data('maintenancestatus');
-        var lastMaintenanceDate = $(this).data('lastmaintenancedate');
-        var alertClass = $(this).data('alertclass');
-        var alertMessage = $(this).data('alertmessage');
+    window.onload = function() {
+        var dataPoints = [
+            <?php foreach ($tableData as $data): ?>
+                { label: "<?php echo $data['tableName']; ?>", y: <?php echo $data['percentageOccupancy']; ?> },
+            <?php endforeach; ?>
+        ];
 
-        $('#modalClientNum').text(clientNum);
-        $('#modalDpNum').text(dpNum);
-        $('#modalFirstName').text(firstName);
-        $('#modalLastName').text(lastName);
-        $('#modalGraveNo').text(graveNo);
-        $('#modalDateofBirth').text(dateofBirth);
-        $('#modalDateOfDeath').text(dateOfDeath);
-        $('#modalDateofBuried').text(dateofBuried);
-        $('#modalStatus').text(status);
-        $('#modalStatCol').text(statCol);
-        $('#modalAreaNo').text(areaNo);
-        $('#modalGraveType').text(graveType);
-        $('#modalBuriedStatus').text(buriedStatus);
-        $('#modalMaintenanceStatus').text(maintenanceStatus);
-        $('#modalLastMaintenanceDate').text(lastMaintenanceDate);
-
-        $('#modalAlert').removeClass('alert-danger alert-warning alert-info alert-success').addClass(alertClass);
-        $('#modalAlertMessage').text(alertMessage);
-
-        $('#graveDetailsModal').modal('show');
-    });
-
-    // Close the modal when the user clicks the close button
-    $('.close').on('click', function() {
-        $('#graveDetailsModal').modal('hide');
-    });
-});
-
+        var chart = new CanvasJS.Chart("chartsContainer", {
+            animationEnabled: true,
+            theme: "light2",
+            title: {
+                text: "Occupancy Percentage"
+            },
+            data: [{
+                type: "pie",
+                yValueFormatString: "#,##0.00\"%\"",
+                indexLabel: "{label} ({y})",
+                dataPoints: dataPoints
+            }]
+        });
+        chart.render();
+    }
 </script>
-
 <script src="script2.js"></script>
 </body>
 </html>

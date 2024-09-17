@@ -15,7 +15,7 @@ if (isset($_POST['messageId'])) {
             echo "<div class='admin-responses'>";
             while ($row = mysqli_fetch_assoc($adminResponses)) {
                 echo "<div class='response'>";
-                echo "<p class='response-content'>" . $row['response_message'] . "</p>";
+                echo "<strong><p class='response-content'>" . $row['response_message'] . "</p></strong>";
                 echo "<p class='response-date'>" . $row['response_date'] . "</p>";
                 echo "</div>";
             }
