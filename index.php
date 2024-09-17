@@ -106,8 +106,8 @@
     </nav>
     <div class="page landing-page">
         <section class="clean-block clean-hero" style="background-image:url('assets/img/homepage.jpg'); color:rgba(9, 162, 255, 0); background-size: cover; background-position: center;">
-            <div class="text" style="color: black;">
-                <h2>Find a grave MARVIN!!</h2>
+            <div class="text" style="color: rgb(45, 24, 24);">
+                <h2>Find a grave!!</h2>
                 <p>Register the grave of your loved one for easy search and tracking of their grave</p>
             </div>
         </section>

@@ -214,7 +214,7 @@ if (isset($_SESSION['user_id'])) {
 							
 						</tbody>
                         <?php
-// Your PHP code to check if the 'm' parameter is set in the URL and display the success message
+// to check if the 'm' parameter is set in the URL and display the success message
 if (isset($_GET['m'])) {
 ?>
     <div class="flash-data" data-flashdata="<?php echo $_GET['m']; ?>"></div>

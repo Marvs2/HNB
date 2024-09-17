@@ -272,7 +272,7 @@ $result = mysqli_query($conn, $query);
             $('#messageId').val(id);
 			  // Set the value of the hidden input field
 			$('#message_Id').val(id);
-            $('#messageDetails').html("ID: " + id);
+            $('#messageDetails').html("Tracking No.: " + id);
             $('#messageModal').modal('show'); // Show the modal
         });
     });
